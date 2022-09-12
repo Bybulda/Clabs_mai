@@ -2,7 +2,7 @@
 #include "math.h"
 
 
-int atoi(char s[])
+int atoi(char *s)
 {
     int i, n;
     n = 0;
@@ -11,39 +11,11 @@ int atoi(char s[])
     return n;
 }
 
-int ifcommon(int n){
-    int step = pow(n, 0.5) + 1;
-    for (int i = 3; i*i < step; i+=2){
-        if (!n%i){
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int powers(int n){
-    printf("1 ");
-    for (int i = 2; i<=n;i++){
-        if (i >9){
-            printf("%lld ", (long long) pow(i, i));
-        }
-        else{
-            printf("%d ", (int) pow(i, i));
-        }
-    }
-}
-
-int sum(int n){
-    if (n == 1){
-        return 1;
-    }
-    return n + sum(n - 1);
-}
 
 int kratn(int n){
     int flag = 0;
-    for (int i = 2; i < 100; i++){
-        if (!i%n){
+    for (int i = n; i <= 100; i++){
+        if (!(i%n)){
             flag = 1;
             printf("%d ", i);
         }
@@ -53,6 +25,18 @@ int kratn(int n){
     }
     return 0;
 }
+
+
+int ifcommon(int n){
+    double step = pow(n, 0.5) + 1;
+    for (int i = 2; i < (int) step; i+=2){
+        if (!(n%i)){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 
 int split(int n, int del){
     if (del == 0){
@@ -70,6 +54,26 @@ int split(int n, int del){
 }
 
 
+int powers(int n){
+    printf("1 ");
+    for (int i = 2; i<=n;i++){
+        if (i >9){
+            printf("%lld ", (long long) pow(i, i));
+        }
+        else{
+            printf("%d ", (int) pow(i, i));
+        }
+    }
+}
+
+
+int sum(int n){
+    if (n == 1){
+        return 1;
+    }
+    return n + sum(n - 1);
+}
+
 
 unsigned fact(unsigned int num){
     if (num == 1){
@@ -78,11 +82,10 @@ unsigned fact(unsigned int num){
     return num * fact(num - 1);
 }
 
+
 int main() {
     int n;
     scanf("%d", &n);
-    powers(n);
-//    int b = sum(n);
-//    printf("%d\n", b);
+    printf("%d", ifcommon(n));
     return 0;
 }
