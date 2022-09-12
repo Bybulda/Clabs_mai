@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
         ifcommon(toi(argv[1]));
     }
     else if (argc == 3 && (!strcmp(argv[2], "-s") || !strcmp(argv[2], "/s"))){
-        split(toi(argv[1]));
+        split(toi(argv[1]), 1);
     }
     else if (argc == 3 && (!strcmp(argv[2], "-e") || !strcmp(argv[2], "/e"))){
         powers(toi(argv[1]));
