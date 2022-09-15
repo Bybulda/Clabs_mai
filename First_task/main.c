@@ -13,7 +13,7 @@ int toi(char *s)
 }
 
 
-int kratn(int n){
+void kratn(int n){
     int flag = 0;
     for (int i = n; i <= 100; i++){
         if (!(i%n)){
@@ -24,11 +24,11 @@ int kratn(int n){
     if (!flag){
         printf("There were nothing to find");
     }
-    return 0;
+    return;
 }
 
 
-int ifcommon(int n){
+void ifcommon(int n){
     double step = pow(n, 0.5) + 1;
     for (int i = 2; i < (int) step; i+=2){
         if (!(n%i)){
@@ -36,13 +36,12 @@ int ifcommon(int n){
         }
     }
     printf("This is a common number\n");
-    return 0;
 }
 
 
-int split(int n, int del){
+void split(int n, int del){
     if (del == 0){
-        return 0;
+        return;
     }
     else if (n / (del* 10) == 0){
         printf("%d ", n / del);
@@ -56,7 +55,7 @@ int split(int n, int del){
 }
 
 
-int powers(int n){
+void powers(int n){
     printf("1 ");
     for (int i = 2; i<=n;i++){
         if (i >9){
