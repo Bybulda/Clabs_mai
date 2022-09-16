@@ -1,15 +1,32 @@
 #include <stdio.h>
-#include "math.h"
 #include "string.h"
+#include "math.h"
+#include "limits.h"
+#include "stdlib.h"
 
 
-int toi(char *s)
-{
-    int i, n;
-    n = 0;
-    for (i = 0; s[i] >= '0' && s[i] <= '9'; ++i)
-        n = (n * 10) + (s[i] - '0');
+int toi(char *s){
+    int n = 0;
+    for(int i = 0; s[i] != '\0'; i++){
+        if (n > INT_MAX/10){
+            printf("Overflow error, try lower number\n");
+            exit(0);
+        }
+        if (s[i] - '0' < 0 || s[i] - '9' > 9){
+            printf("Not a number\n");
+            exit(0);
+        }
+        n = n * 10 + (s[i] - '0');
+    }
     return n;
+}
+
+
+double power(double a, double n){
+    if (n == 1){
+        return a;
+    }
+    return a * power(a, n - 1);
 }
 
 
@@ -24,12 +41,11 @@ void kratn(int n){
     if (!flag){
         printf("There were nothing to find");
     }
-    return;
 }
 
 
 void ifcommon(int n){
-    double step = pow(n, 0.5) + 1;
+    double step = sqrt(n) + 1;
     for (int i = 2; i < (int) step; i+=2){
         if (!(n%i)){
             printf("Yeah, this one is composite number\n");
@@ -39,19 +55,11 @@ void ifcommon(int n){
 }
 
 
-void split(int n, int del){
-    if (del == 0){
-        return;
+void split(int n){
+    if (n != 0){
+        split(n / 10);
+        printf("%d ", n % 10);
     }
-    else if (n / (del* 10) == 0){
-        printf("%d ", n / del);
-        split(n % del, del / 10);
-    }
-
-    else{
-        split(n, del*10);
-    }
-
 }
 
 
@@ -69,10 +77,7 @@ void powers(int n){
 
 
 int sum(int n){
-    if (n == 1){
-        return 1;
-    }
-    return n + sum(n - 1);
+    return n*(1 + n)/2;
 }
 
 
@@ -86,27 +91,28 @@ long long fact(long long num){
 
 int main(int argc, char *argv[]) {
     int n;
-    if (argc<3){
+    if (argc!=3){
         printf("U must enter a number and a flag!\nExample: <number> </p or -p>\n");
+        exit(0);
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-h") || !strcmp(argv[2], "/h"))){
-        n = toi(argv[1]);
+    n = toi(argv[1]);
+    if (!strcmp(argv[2], "-h") || !strcmp(argv[2], "/h")){
         kratn(n);
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-p") || !strcmp(argv[2], "/p"))){
-        ifcommon(toi(argv[1]));
+    else if (!strcmp(argv[2], "-p") || !strcmp(argv[2], "/p")){
+        ifcommon(n);
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-s") || !strcmp(argv[2], "/s"))){
-        split(toi(argv[1]), 1);
+    else if (!strcmp(argv[2], "-s") || !strcmp(argv[2], "/s")){
+        split(n);
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-e") || !strcmp(argv[2], "/e"))){
-        powers(toi(argv[1]));
+    else if (!strcmp(argv[2], "-e") || !strcmp(argv[2], "/e")){
+        powers(n);
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-a") || !strcmp(argv[2], "/a"))){
-        printf("The sum is %d", sum(toi(argv[1])));
+    else if (!strcmp(argv[2], "-a") || !strcmp(argv[2], "/a")){
+        printf("The sum is %d", sum(n));
     }
-    else if (argc == 3 && (!strcmp(argv[2], "-f") || !strcmp(argv[2], "/f"))){
-        printf("The factorial is %lld", fact(toi(argv[1])));
+    else if (!strcmp(argv[2], "-f") || !strcmp(argv[2], "/f")){
+        printf("The factorial is %lld", fact(n));
     }
     return 0;
 }
