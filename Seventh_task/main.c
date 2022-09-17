@@ -28,7 +28,7 @@ void arr_print(int *arr){
         if (!(i % 8)){
             printf("\n");
         }
-        printf("%d, ", arr[i]);
+        printf("%d ", arr[i]);
     }
 }
 
@@ -40,7 +40,7 @@ int main() {
             printf("\n");
         }
         n[i] = rand();
-        printf("%d, ", n[i]);
+        printf("%d ", n[i]);
     }
     printf("\n\n");
     find_min_max(n);
