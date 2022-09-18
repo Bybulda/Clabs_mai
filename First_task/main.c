@@ -5,7 +5,7 @@
 #include "stdlib.h"
 
 
-int toi(char *s){
+unsigned int toi(char *s){
     int n = 0;
     for(int i = 0; s[i] != '\0'; i++){
         if (n > INT_MAX/10){
@@ -18,15 +18,11 @@ int toi(char *s){
         }
         n = n * 10 + (s[i] - '0');
     }
-    return n;
-}
-
-
-double power(double a, double n){
-    if (n == 1){
-        return a;
+    if (n == 0){
+        printf("Only positive numbers!!!\n");
+        exit(0);
     }
-    return a * power(a, n - 1);
+    return n;
 }
 
 
@@ -45,6 +41,10 @@ void kratn(int n){
 
 
 void ifcommon(int n){
+    if (n == 1){
+        printf("Thats not a composite and not a common number\n");
+        exit(0);
+    }
     double step = sqrt(n) + 1;
     for (int i = 2; i < (int) step; i+=2){
         if (!(n%i)){
@@ -63,27 +63,40 @@ void split(int n){
 }
 
 
-void powers(int n){
-    printf("1 ");
-    for (int i = 2; i<=n;i++){
-        if (i >9){
-            printf("%lld ", (long long) pow(i, i));
+void powers(unsigned int n){
+    unsigned int tmp;
+    for (int i = 1; i < 11; i++){
+        printf("For %d: ", i);
+        tmp = 1;
+        for (int j = 0; j < n; j++){
+            if (i > 8 && j > 8){
+                printf("%llu ", (unsigned long long) (tmp*=(i)));
+            }
+            else {
+                printf("%d ", tmp*=(i));
+            }
         }
-        else{
-            printf("%d ", (int) pow(i, i));
-        }
+        printf("\n");
     }
 }
 
 
-int sum(int n){
+unsigned int sum(int n){
+    if (n > (UINT_MAX*2)/n - 1){
+        printf("Overflow error!\n");
+        exit(0);
+    }
     return n*(1 + n)/2;
 }
 
 
-long long fact(long long num){
+unsigned long long fact(unsigned int num){
     if (num == 1){
         return num;
+    }
+    else if (num > 22){
+        printf("OVERFLOW, PLS ENTER SMTH LOWER\n");
+        exit(0);
     }
     return num * fact(num - 1);
 }
@@ -106,6 +119,10 @@ int main(int argc, char *argv[]) {
         split(n);
     }
     else if (!strcmp(argv[2], "-e") || !strcmp(argv[2], "/e")){
+        if (n > 10){
+            printf("Number must be 10 or lower!!\n");
+            exit(0);
+        }
         powers(n);
     }
     else if (!strcmp(argv[2], "-a") || !strcmp(argv[2], "/a")){
