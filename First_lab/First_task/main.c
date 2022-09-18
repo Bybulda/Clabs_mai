@@ -19,7 +19,7 @@ unsigned int toi(char *s){
         n = n * 10 + (s[i] - '0');
     }
     if (n == 0){
-        printf("Only positive numbers!!!\n");
+        printf("Only positive numbers!!\n");
         exit(0);
     }
     return n;
