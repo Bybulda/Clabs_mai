@@ -8,7 +8,7 @@
 unsigned int toi(char *s){
     int n = 0;
     for(int i = 0; s[i] != '\0'; i++){
-        if (n > INT_MAX/10){
+        if (n > UINT_MAX/10){
             printf("Overflow error, try lower number\n");
             exit(0);
         }
@@ -26,9 +26,9 @@ unsigned int toi(char *s){
 }
 
 
-void kratn(int n){
+void kratn(unsigned int n){
     int flag = 0;
-    for (int i = n; i <= 100; i++){
+    for (unsigned int i = n; i <= 100; i++){
         if (!(i%n)){
             flag = 1;
             printf("%d ", i);
@@ -40,7 +40,7 @@ void kratn(int n){
 }
 
 
-void ifcommon(int n){
+void ifcommon(unsigned int n){
     if (n == 1){
         printf("Thats not a composite and not a common number\n");
         exit(0);
@@ -55,7 +55,7 @@ void ifcommon(int n){
 }
 
 
-void split(int n){
+void split(unsigned int n){
     if (n != 0){
         split(n / 10);
         printf("%d ", n % 10);
@@ -103,13 +103,17 @@ unsigned long long fact(unsigned int num){
 
 
 int main(int argc, char *argv[]) {
-    int n;
+    unsigned int n;
     if (argc!=3){
         printf("U must enter a number and a flag!\nExample: <number> </p or -p>\n");
         exit(0);
     }
     n = toi(argv[1]);
     if (!strcmp(argv[2], "-h") || !strcmp(argv[2], "/h")){
+        if (n > 100){
+            printf("Enter different number, which is lower than 100\n");
+            exit(0);
+        }
         kratn(n);
     }
     else if (!strcmp(argv[2], "-p") || !strcmp(argv[2], "/p")){
