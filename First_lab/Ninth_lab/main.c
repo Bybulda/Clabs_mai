@@ -3,15 +3,17 @@
 #include "string.h"
 #include "limits.h"
 #include "stdlib.h"
-#include "ctype.h"
 
 
- int toi(char *s){
-    int n = 0;
+int toi(char *s, int base){
+    int n = 0, neg = 1;
     for(int i = 0; s[i] != '\0'; i++){
         if (n > UINT_MAX/10){
             printf("Overflow error, try lower number\n");
             exit(0);
+        }
+        if (s[i] == '-'){
+            neg = -1;
         }
         if (s[i] - '0' < 0 || s[i] - '9' > 9){
             printf("Not a number\n");
@@ -19,68 +21,7 @@
         }
         n = n * 10 + (s[i] - '0');
     }
-    return n;
-}
-
-
-double tof(char *s){
-    return 1.9;
-}
-
-
-int int_or_float(char *s){
-    int flag = 0;
-    while(*s){
-        if (!isdigit(*s)){
-            if (*s == '.' || *s == ','){
-                flag = 1;
-                break;
-            }
-            if (isalpha(*s)) {
-                printf("Please use numbers!!\n");
-                exit(0);
-            }
-        }
-        *s++;
-    }
-    if (!flag) return 1;
-    else return 0;
-}
-double find_x(double b, double c){
-    return -1. * (c) / b;
-}
-
-
-double find_x_d(int b, double a, double d){
-    return ((-sqrt(b))+d) / (2*a);
-}
-
-
-int descrim(int a, int b, int c){
-    return b * b - 4 * a * c;
-}
-
-
-void f_x(int a, int b, int c){
-    printf("For a*x^2 + b*x + c^2 = 0\n x1 = %lf, x2 = %lf", a, b);
-}
-
-
-void kratn(int a, int b){
-    !(a%b) ? printf("Yes, %d kratno %d\n", a, b) : printf("No, %d ne kratno %d\n", a, b);
-}
-
-
-void if_triangle(double a, double b, double c){
-    a *= a;
-    b *= b;
-    c *= c;
-    if (a + b == c || a + c == b || b + c == a){
-        printf("Yes it can be a right triangle\n");
-    }
-    else{
-        printf("No, it`s not a right triangle\n");
-    }
+    return neg * n;
 }
 
 
