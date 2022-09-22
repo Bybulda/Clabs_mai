@@ -5,8 +5,12 @@
 #include "stdlib.h"
 
 
-unsigned int toi(char *s){
+int toi(char *s){
     int n = 0;
+    if (*s == '-'){
+        printf("Only positive numbers!!\n");
+        exit(0);
+    }
     for(int i = 0; s[i] != '\0'; i++){
         if (n > UINT_MAX/10){
             printf("Overflow error, try lower number\n");
@@ -81,7 +85,7 @@ void powers(unsigned int n){
 }
 
 
-unsigned int sum(int n){
+int sum(int n){
     if (n > (UINT_MAX*2)/n - 1){
         printf("Overflow error!\n");
         exit(0);
@@ -103,7 +107,7 @@ unsigned long long fact(unsigned int num){
 
 
 int main(int argc, char *argv[]) {
-    unsigned int n;
+    int n;
     if (argc!=3){
         printf("U must enter a number and a flag!\nExample: <number> </p or -p>\n");
         exit(0);

@@ -5,6 +5,8 @@
 #include "stdlib.h"
 #include "ctype.h"
 
+#define EPS 1e-7
+
 
  int toi(char *s){
     int n = 0;
@@ -61,12 +63,15 @@ int descrim(int a, int b, int c){
 }
 
 
-void f_x(int a, int b, int c){
-    printf("For a*x^2 + b*x + c^2 = 0\n x1 = %lf, x2 = %lf", a, b);
+void f_x(float a, float b, float c){
+    double discr = b * b - 4 * a * c;
+    if (fabs(discr) < EPS){
+        printf("Zero solvings for this one")
+    }
 }
 
 
-void kratn(int a, int b){
+void kratn(float a, int b){
     !(a%b) ? printf("Yes, %d kratno %d\n", a, b) : printf("No, %d ne kratno %d\n", a, b);
 }
 
