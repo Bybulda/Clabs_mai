@@ -82,19 +82,19 @@ void replace_two_five(FILE *fin, FILE* fout){
 
 
 int main(int argc, char *argv[]) {
-    printf("%s\n%s\n%s\n", argv[0], argv[1], argv[2]);
     FILE* fin = NULL;
     FILE* fout = NULL;
-    if (argc < 3 || strlen(argv[1]) > 3){
+    short int arlen = strlen(argv[1]);
+    if (argc < 3 || arlen > 3){
         printf("Too few arguments, or incorrect input\n");
         exit(0);
     }
+    fin = fopen(argv[2], "r");
     if (argv[1][1] == 'n'){
         if (argc != 4){
             printf("Too few arguments!\n");
             exit(0);
         }
-        fin = fopen(argv[2], "r");
         fout = fopen(argv[3], "w");
         if ((fin == NULL) || (fout == NULL)){
             printf("Wrong files, try another!\n");
