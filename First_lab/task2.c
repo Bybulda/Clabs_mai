@@ -1,28 +1,10 @@
 #include <stdio.h>
 #include "math.h"
 #include "string.h"
-#include "limits.h"
 #include "stdlib.h"
 #include "ctype.h"
 
 #define EPS 1e-7
-
-
- int toi(char *s){
-    int n = 0;
-    for(int i = 0; s[i] != '\0'; i++){
-        if (n > UINT_MAX/10){
-            printf("Overflow error, try lower number\n");
-            exit(0);
-        }
-        if (s[i] - '0' < 0 || s[i] - '9' > 9){
-            printf("Not a number\n");
-            exit(0);
-        }
-        n = n * 10 + (s[i] - '0');
-    }
-    return n;
-}
 
 
 float tof(char *s){
@@ -71,7 +53,7 @@ double f_x(float a, float b, float c){
         b = arr[(i+1)%3];
         c = arr[(i+2)%3];
         disc = b * b - 4 * a*c;
-        if (checker(disc) && fabs(arr[i]) > EPS){
+        if (checker(disc) && checker(arr[i])){
             disc = sqrt(disc);
             printf("The answer for %lf*x^2 + %lf*x + %lf = 0 is x1 = %lf, x2 = %lf\n", a, b, c, find_x_d(b, a, disc), find_x_d(b, a, -disc));
         }
@@ -98,22 +80,21 @@ int kratn(float a, float b){
 }
 
 
-void if_triangle(double a, double b, double c){
+int if_triangle(double a, double b, double c) {
     if (!checker(a) && !checker(b) && !checker(c))
         printf("Please use natural numbers!\n");
     a *= a;
     b *= b;
     c *= c;
-    if (a + b - c < EPS || a + c - b < EPS || b + c - a < EPS)
-        printf("Yes it can be a right triangle\n");
-    else
-        printf("No, it`s not a right triangle\n");
+    if (!checker(a + b - c) || !checker(a + c - b) || !checker(b + c - a)){
+        return 1;
+    }
+    return 0;
 }
 
 
 int main(int argc, char *argv[]) {
     int n;
-//    printf("%d\n", argc);
     if (argc<4){
         printf("U must enter a number and a flag!\nExample: <number> </q or -q>\n");
     }
@@ -130,7 +111,8 @@ int main(int argc, char *argv[]) {
             printf("Yes %lf is a multiple of %lf\n", a, b);
     }
     else if (argc == 5 && (!strcmp(argv[1], "-t") || !strcmp(argv[1], "/t"))){
-        if_triangle(toi(argv[2]), toi(argv[3]), toi(argv[4]));
+        int res = if_triangle(tof(argv[2]), tof(argv[3]), tof(argv[4]));
+        res ? printf("Yes it can be a right triangle\n") : printf("No it cant be a right triangle\n");
     }
     else{
         printf("Something went wrong, try again pls\n");
