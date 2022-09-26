@@ -56,27 +56,25 @@ void ascii_ex(FILE *fin, FILE *fout){
 
 
 void replace_two_five(FILE *fin, FILE* fout){
-    int c, c_ = 0;
-    int count = 1;
+    int c, _c = 0;
+    int count = 0;
     while ((c = fgetc(fin)) != EOF){
-        if ((isdigit(c) || isalpha(c)) &&(!isdigit(c_)&&!isalpha(c_))){
+        if (isalnum(c) && !isalnum(_c)){
             count++;
+        }
+        if (isalnum(c)){
+            if (!(count % 10))
+                isalpha(c) ? fprintf(fout, "%d", tolower(c)) : fprintf(fout, "%d", c);
+            else if (!(count & 1))
+                isalpha(c) ? fputc(tolower(c), fout) : fputc(c, fout);
+            else if (!(count % 5))
+                fprintf(fout, "%d", c);
+            else
+                fputc(c, fout);
+        }
+        else
             fputc(c, fout);
-        }
-        else if(!(count % 10)){
-            c = tolower(c);
-            isdigit(c) ? fprintf(fout, "%d", c) : fprintf(fout, "%d", tolower(c));
-        }
-        else if(!(count % 2) && isalpha(c)){
-            fputc(tolower(c), fout);
-        }
-        else if(!(count % 5)){
-            fprintf(fout, "%d", c);
-        }
-        else{
-            fputc(c, fout);
-        }
-        c_ = c;
+        c = _c;
     }
 }
 
@@ -84,7 +82,7 @@ void replace_two_five(FILE *fin, FILE* fout){
 int main(int argc, char *argv[]) {
     FILE* fin = NULL;
     FILE* fout = NULL;
-    short int arlen = strlen(argv[1]);
+    int arlen = strlen(argv[1]);
     if (argc < 3 || arlen > 3){
         printf("Too few arguments, or incorrect input\n");
         exit(0);
