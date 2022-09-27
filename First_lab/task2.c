@@ -96,7 +96,7 @@ int if_triangle(double a, double b, double c) {
 int main(int argc, char *argv[]) {
     int n;
     if (argc<4){
-        printf("U must enter a number and a flag!\nExample: <number> </q or -q>\n");
+        printf("U must enter a number and a flag!\nExample: <flag> </q or -q> <number>\n");
     }
     else if (argc == 5 && (!strcmp(argv[1], "-q") || !strcmp(argv[1], "/q"))){
         f_x(tof(argv[2]), tof(argv[3]), tof(argv[4]));
