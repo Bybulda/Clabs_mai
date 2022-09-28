@@ -74,7 +74,7 @@ void replace_two_five(FILE *fin, FILE* fout){
         }
         else
             fputc(c, fout);
-        c = _c;
+        _c = c;
     }
 }
 

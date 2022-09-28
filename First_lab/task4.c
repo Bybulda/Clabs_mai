@@ -100,9 +100,7 @@ int main(int argc, char *argv[]){
             }
         }
         else if (c == '\r' || c == EOF){
-            fprintf(fout, "%s ", buff2);
-            fprintf(fout, "%s ", buff3);
-            fprintf(fout, "%s", buff1);
+            fprintf(fout, "%s %s %s", buff2, buff3, buff1);
             c != EOF ? fputc('\r', fout) : fputc(' ', fout);
             free(buff1);
             free(buff2);
