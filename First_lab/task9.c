@@ -15,10 +15,7 @@ int toi(char *s, int base){
         if (s[i] == '-'){
             neg = -1;
         }
-        if (s[i] - '0' < 0 || s[i] - '9' > 9){
-            printf("Not a number\n");
-            exit(0);
-        }
+
         n = n * 10 + (s[i] - '0');
     }
     return neg * n;
