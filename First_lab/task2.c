@@ -1,8 +1,6 @@
 #include <stdio.h>
-#include "math.h"
-#include "string.h"
-#include "stdlib.h"
-#include "ctype.h"
+#include <math.h>
+#include <string.h>
 
 #define EPS 1e-7
 

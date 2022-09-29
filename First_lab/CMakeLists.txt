@@ -18,7 +18,8 @@ add_executable(task4
 add_executable(task5
         task5.c)
 #
-#add_executable(Clabs First_lab/task6.c)
+add_executable(task6
+        task6.c)
 
 add_executable(task7
         task7.c)

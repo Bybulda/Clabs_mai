@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "string.h"
-#include "stdlib.h"
-#include "ctype.h"
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #define SIZE 16
 
 
@@ -75,7 +75,6 @@ int main(int argc, char *argv[]){
         }
         else if (isalnum(_c) && !isalnum(c) && c != '\r' && c != EOF){
             if (num == 1){
-                printf("%s", buff1);
                 if (sized == curr_size - 2){
                     buff1[sized] = '\0';
                     buff1 = str_realloc(buff1, curr_size + 1);
@@ -83,7 +82,6 @@ int main(int argc, char *argv[]){
                 buff1[sized] = '\0';
             }
             else if (num == 2){
-                printf("%s", buff1);
                 if (sized == curr_size - 2){
                     buff2[sized] = '\0';
                     buff2 = str_realloc(buff2, curr_size + 1);
@@ -91,7 +89,6 @@ int main(int argc, char *argv[]){
                 buff2[sized] = '\0';
             }
             else if (num == 3){
-                printf("%s", buff1);
                 if (sized == curr_size - 2){
                     buff3[sized] = '\0';
                     buff3 = str_realloc(buff3, curr_size + 1);
@@ -100,7 +97,6 @@ int main(int argc, char *argv[]){
             }
         }
         else if (c == '\r' || c == EOF){
-            fprintf(fout, "%s %s %s", buff2, buff3, buff1);
             c != EOF ? fputc('\r', fout) : fputc(' ', fout);
             free(buff1);
             free(buff2);
