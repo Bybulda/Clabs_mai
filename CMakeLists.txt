@@ -6,6 +6,9 @@ set(CMAKE_C_STANDARD 99)
 add_executable(l2_task1
         Second_lab/l2_task1.c)
 
+add_executable(l2_task2
+        Second_lab/l2_task2.c)
+
 add_executable(task2
         First_lab/task2.c)
 
