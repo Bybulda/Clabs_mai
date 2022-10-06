@@ -9,6 +9,12 @@ add_executable(l2_task1
 add_executable(l2_task2
         Second_lab/l2_task2.c)
 
+add_executable(l2_task4
+        Second_lab/l2_task4.c)
+
+add_executable(l2_task5
+        Second_lab/l2_task5.c)
+
 add_executable(task2
         First_lab/task2.c)
 
