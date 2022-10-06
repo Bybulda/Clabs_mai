@@ -52,16 +52,18 @@ int find_min_max(int size, int *arr){
 
 
 int fill_unique(int* arr1, int*arr2, int size, int* size_sec){
-    qsort(arr1, size, sizeof(int), cmp);
     int* buff = size_sec;
     int count = 0;
-    for (int i = 0; i < size; i++){
-        if (i < size - 1 && arr1[i] != arr1[i + 1] || i == size - 1 && arr1[i - 1] != arr1[i]){
+    for (int i=0; i< size; i++) {
+        int f = 1;
+        for (int j = 0; j < count; j++) {
+            if (arr1[i] == arr2[j]) {
+                f = 0;
+                break;
+            }
+        }
+        if (f)
             arr2[count++] = arr1[i];
-        }
-        else{
-            i++;
-        }
     }
     *buff = count;
     return 0;
