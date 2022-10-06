@@ -3,10 +3,6 @@
 #include <time.h>
 
 
-int cmp(const void * x, const void * y){
-    return ( *(int*)x - *(int*)y );
-}
-
 void arr_print(int size, int *arr){
     printf("\n");
     for(int i = 0; i < size; i++){
