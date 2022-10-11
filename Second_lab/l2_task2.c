@@ -38,7 +38,27 @@ int to_upper(char* str){
 }
 
 
-int hard_func(char* str);
+int hard_func(char* str, int size){
+    char* digit[size], alpha[size], els[size];
+    int dis = 0, als = 0, elss = 0;
+    for(int i = 0; i < size; i++){
+      if (isdigit(str[i])){
+        digit[dis++] = str[i];
+      }
+      else if(isalpha(str[i])){
+        alpha[als++] = str[i];
+      }
+      else
+        els[elss++] = str[i];
+    }
+    int cnt = 0;
+    while (*digit)
+      str[cnt++] = *digit++;
+    while (*alpha)
+      str[cnt++] = *digit++;
+    while (*els)
+        str[cnt++] = *digit++;
+}
 
 
 int str_cat(char* str1, char* str2, char* buff){
