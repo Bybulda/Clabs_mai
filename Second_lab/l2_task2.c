@@ -39,7 +39,13 @@ int to_upper(char* str){
 
 
 int hard_func(char* str, int size){
-    char* digit[size], alpha[size], els[size];
+    char *digit = calloc(size, sizeof(char));
+    char *alpha = calloc(size, sizeof(char));
+    char *els = calloc(size, sizeof(char));
+    if (!digit || !alpha || !els){
+        printf("No memory error\n");
+        return -1;
+    }
     int dis = 0, als = 0, elss = 0;
     for(int i = 0; i < size; i++){
       if (isdigit(str[i])){
@@ -52,12 +58,16 @@ int hard_func(char* str, int size){
         els[elss++] = str[i];
     }
     int cnt = 0;
-    while (*digit)
-      str[cnt++] = *digit++;
-    while (*alpha)
-      str[cnt++] = *digit++;
-    while (*els)
-        str[cnt++] = *digit++;
+    for(int i = 0; i < dis; i++)
+      str[cnt++] = digit[i];
+    for(int i = 0; i < als; i++)
+      str[cnt++] = alpha[i];
+    for(int i = 0; i < elss; i++)
+        str[cnt++] = els[i];
+    free(els);
+    free(alpha);
+    free(digit);
+    return 0;
 }
 
 
@@ -94,7 +104,9 @@ int main(int argc, char* argv[]){
         printf("The string after upper: %s\n", argv[1]);
     }
     else if(!strcmp(argv[2], "-n")){
-        printf("Current len of '%s' is: %d", argv[1], len(argv[1]));
+        printf("The formation of '%s' is ", argv[1]);
+        hard_func(argv[1], len(argv[1]));
+        printf("'%s'\n", argv[1]);
     }
     else if(!strcmp(argv[2], "-c")){
         printf("The first string - %s\n", argv[1]);
