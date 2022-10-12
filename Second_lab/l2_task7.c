@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
 #include <stdarg.h>
 
 
 typedef struct coord{
-    double x;
-    double y;
+    int x;
+    int y;
 } coord;
 
 
@@ -16,7 +15,10 @@ int ifconvex(int count, ...);
 
 int main(){
     printf("%lf\n", polinom(2.0, 2, 1., 3., 4.));
-
+    if (ifconvex(8, 0, 0, 0, 1, 1, 1, 1, 0))
+        printf("The polygon convex!\n");
+    else
+        printf("The polygon is not convex!\n");
     return 0;
 }
 
@@ -39,18 +41,30 @@ double polinom(double x, int n, ...){
 
 
 int ifconvex(int count, ...){
-    coord** coordinated = NULL;
     int step = count / 2;
-    coordinated = (coord**)malloc((step)* sizeof(coord*));
-    if (*coordinated != NULL){
-        if (!(count&1) && count > 5){
-            va_list l;
-            va_start(l, count);
-            for (int i = 0; i < step; i++) {
-                (*coordinated)[i].x = va_arg(l, double);
-                (*coordinated)[i].y = va_arg(l, double);
-            }
-            va_end(l);
+    coord coordinated[step];
+    if (!(count&1) && count > 5){
+        va_list l;
+        va_start(l, count);
+        for (int i = 0; i < step; i++) {
+            (coordinated)[i].x = va_arg(l, int);
+            (coordinated)[i].y = va_arg(l, int);
         }
+        va_end(l);
+        int sign;
+        for (int i = 0; i < count; i++) {
+            int ixy1 = (i + 1) % count, ixy = i % count, ixy2 = (i + 2) % count;
+            int x1 = coordinated[ixy1].x - coordinated[ixy].x;
+            int y1 = coordinated[ixy1].y - coordinated[ixy].y;
+            int x2 = coordinated[ixy2].x - coordinated[ixy].x;
+            int y2 = coordinated[ixy2].y - coordinated[ixy].y;
+            int det = x1 * y2 - x2 * y1;
+            if (i == 0)
+                sign = (det > 0);
+            else if (sign != (det > 0))
+                return 0;
+        }
+        return 1;
     }
+    return -1;
 }
