@@ -14,11 +14,11 @@ int ifconvex(int count, ...);
 
 
 int main(){
-    printf("%lf\n", polinom(2.0, 2, 1., 3., 4.));
+    printf("Counted Polinominal is %lf\n", polinom(2.0, 2, 1., 3., 4.));
     if (ifconvex(8, 0, 0, 0, 1, 1, 1, 1, 0))
-        printf("The polygon convex!\n");
+        printf("The inserted polygon is convex!\n");
     else
-        printf("The polygon is not convex!\n");
+        printf("The inserted polygon is not convex\n");
     return 0;
 }
 
@@ -52,14 +52,14 @@ int ifconvex(int count, ...){
         }
         va_end(l);
         int sign;
-        for (int i = 0; i < count; i++) {
-            int ixy1 = (i + 1) % count, ixy = i % count, ixy2 = (i + 2) % count;
+        for (int i = 0; i < step; i++) {
+            int ixy1 = (i + 1) % step, ixy = i % step, ixy2 = (i + 2) % step;
             int x1 = coordinated[ixy1].x - coordinated[ixy].x;
             int y1 = coordinated[ixy1].y - coordinated[ixy].y;
             int x2 = coordinated[ixy2].x - coordinated[ixy].x;
             int y2 = coordinated[ixy2].y - coordinated[ixy].y;
             int det = x1 * y2 - x2 * y1;
-            if (i == 0)
+            if (!i)
                 sign = (det > 0);
             else if (sign != (det > 0))
                 return 0;
