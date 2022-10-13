@@ -42,7 +42,7 @@ double polinom(double x, int n, ...){
 
 int ifconvex(int count, ...){
     int step = count / 2;
-    coord coordinated[step];// = []
+    coord coordinated[step];
     if (!(count&1) && count > 5){
         va_list l;
         va_start(l, count);
