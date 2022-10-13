@@ -42,13 +42,13 @@ double polinom(double x, int n, ...){
 
 int ifconvex(int count, ...){
     int step = count / 2;
-    coord coordinated[step];
+    coord coordinated[step];// = []
     if (!(count&1) && count > 5){
         va_list l;
         va_start(l, count);
         for (int i = 0; i < step; i++) {
-            (coordinated)[i].x = va_arg(l, int);
-            (coordinated)[i].y = va_arg(l, int);
+            coordinated[i].x = va_arg(l, int);
+            coordinated[i].y = va_arg(l, int);
         }
         va_end(l);
         int sign;

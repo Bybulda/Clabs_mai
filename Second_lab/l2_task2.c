@@ -31,7 +31,7 @@ int reverse(char* str){
 int to_upper(char* str){
     int i = 0;
     while(*str++){
-        if (i & 1)
+        if (!(i++ & 1))
             *str = (char) toupper(*str);
     }
     return 0;

@@ -15,6 +15,9 @@ add_executable(l2_task4
 add_executable(l2_task5
         Second_lab/l2_task5.c)
 
+add_executable(l2_task6
+        Second_lab/l2_task6.c)
+
 add_executable(l2_task7
         Second_lab/l2_task7.c)
 
@@ -49,4 +52,3 @@ add_executable(task9
         First_lab/task9.c)
 
 #add_executable(Clabs First_lab/task10.c)
-
