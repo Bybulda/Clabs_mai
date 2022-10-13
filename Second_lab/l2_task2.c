@@ -32,7 +32,7 @@ int to_upper(char* str){
     int i = 0;
     while(*str++){
         if (!(i++ & 1))
-            *str = (char) toupper(*str);
+            *str = (char) toupper(str[i]);
     }
     return 0;
 }
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
         hard_func(argv[1], len(argv[1]));
         printf("'%s'\n", argv[1]);
     }
-    else if(!strcmp(argv[2], "-c")){
+    else if(!strcmp(argv[3], "-c")){
         printf("The first string - %s\n", argv[1]);
         printf("The second string - %s\n", argv[1]);
         char* buff = calloc((len(argv[1]) + len(argv[2]) + 1), sizeof(char));
