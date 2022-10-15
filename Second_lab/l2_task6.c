@@ -11,7 +11,7 @@ int main(){
     return 0;
 }
 
-int str(char* text, char* pattern, int n, int m){
+int str_search(char* text, char* pattern, int n, int m){
   if (*pattern == '\0' || n == 0)
       printf("The pattern occurs with shift 0");
       return -1;
@@ -53,7 +53,6 @@ int file_str_search(char*str, int count,...){
     va_start(l, count);
     for (int i = 0; i < count; i++) {
         filename = va_arg(l, char*);
-
     }
     va_end(l);
     return 0;
