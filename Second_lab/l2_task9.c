@@ -28,18 +28,17 @@ int main(){
 
 char* squeeze(char* str1, int ln){
     char* tmp = str1;
+    char* tm = str1;
     int zeros = 0;
     while(*tmp == '0'){
       zeros++;
       *tmp++;
     }
     char* st = NULL;
-    st = (char*)malloc(sizeof(char) * (ln - zeros));
-    char* pptr = st;
     while(*tmp)
-      *pptr++ = *tmp++;
-    printf("%s\n", st);
-    free(str1);
+      *tm++ = *tmp++;
+    st = realloc(str1, (ln - zeros) + 1);
+    *tm = 0;
     return st;
 
 }
