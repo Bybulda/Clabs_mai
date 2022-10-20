@@ -46,12 +46,24 @@ char* squeeze(char* str1, int ln){
 }
 
 char* sum_two(char* str1, char* str2, int base){
+    int if_over = 0, flag = 0;
     int ln1 = strlen(str1);
     int ln2 = strlen(str2);
-    char* st1 = NULL;
-    // char* st2 = squeeze(str2, ln2);
-    st1 = squeeze(str1, ln1);
-    printf("%s\n", st1);
+    if (ln1 > ln2){
+        char* res = (char*)calloc(ln1 + 2, 1);
+        int now = ln1 + 2 - 1;
+        for (int i = ln2 - 1, j = ln1 - 1; i > -1; i--) {
+            if (!overflow(str2[i], str1[j], base)) {
+                int rs = (isdigit(str1[j]) ? str1[j] - '0' : str1[j] - 'A' + 10) + (isdigit(str2[i]) ? str2[i] - '0' : str2[i] - 'A' + 10)
+                res[now--] = rs > 9 ? 'A' + rs - 10 : rs;
+            }
+        }
+    }
+    else {
+        char* res = (char*)calloc(ln2 + 2, 1);
+    }
+
+    return "abcd";
 
 }
 
