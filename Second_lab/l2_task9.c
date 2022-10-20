@@ -28,18 +28,20 @@ int main(){
 
 char* squeeze(char* str1, int ln){
     char* tmp = str1;
-    char* tm = str1;
-    int zeros = 0;
+    int zero = 0;
     while(*tmp == '0'){
-      zeros++;
+      zero++;
       *tmp++;
     }
-    char* st = NULL;
+    char* stt = (char*)malloc(ln - zero);
+    memset(stt, 0, ln - zero);
+    char* stm = stt;
     while(*tmp)
-      *tm++ = *tmp++;
-    st = realloc(str1, (ln - zeros) + 1);
-    *tm = 0;
-    return st;
+      *stm++ = *tmp++;
+    *stm = '\0';
+    printf("%s\n", stt);
+    // free(str1);
+    return stt;
 
 }
 
@@ -47,7 +49,7 @@ char* sum_two(char* str1, char* str2, int base){
     int ln1 = strlen(str1);
     int ln2 = strlen(str2);
     char* st1 = NULL;
-    char* st2 = squeeze(str2, ln2);
+    // char* st2 = squeeze(str2, ln2);
     st1 = squeeze(str1, ln1);
     printf("%s\n", st1);
 
@@ -59,14 +61,17 @@ int sum_all(char* buff, int base, int n, ...){
       return -1;
     }
     char* bf1 = NULL;
+    char* tmp = NULL;
 
     va_list l;
     va_start(l, n);
-    for (size_t i = 0; i < n; i++) {
-        if (!i)
-          bf1 = va_arg(l, char*);
-        else
-          bf1 = sum_two(bf1, va_arg(l, char*), base);
+    for (int i = 0; i < n; i++) {
+        if (!i){
+          bf1 = va_arg(l, char*);}
+        else{
+          tmp = va_arg(l, char*);
+          bf1 = sum_two(bf1, tmp, base);
+          }
     }
     buff = bf1;
     free(bf1);
