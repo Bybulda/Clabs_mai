@@ -6,7 +6,8 @@
 
 int num_bits(int k);
 int check_bits(int l, int num, int straight);
-void bits_in(int l, int k, int** arr, int* len, int* code, int flag);
+void bits_in(int l, int k, int** arr, int* len, int* code);
+void bits_forward(int l, int k, int** arr, int* len, int* code);
 void print_arr(int* arr, int ln);
 
 enum ERRORS{
@@ -41,8 +42,13 @@ int main(){
     printf("\nL cannot exceed k!\n");
     return INPUT_ERROR;
   }
-  bits_in(l, k, &in, &ln1, &check, 0);
+  if (l < 0 || k < 0){
+    printf("\nOnly positive numbers!\n");
+    return INPUT_ERROR;
+  }
+  bits_in(l, k, &in, &ln1, &check);
   if (check == DONE_IN){
+    printf("\nThe first array, numbers have l= %d units\n", l);
     print_arr(in, ln1);
     free(in);
   }
@@ -53,8 +59,9 @@ int main(){
   else if(check == NOT_FOUND)
     printf("Numbers for l=%d and k=%d werent found\n", l, k);
   check = 0;
-  bits_in(l, k, &straight, &ln2, &check, 1);
+  bits_forward(l, k, &straight, &ln2, &check);
   if (check == DONE_STRAIGHT){
+    printf("\nThe first array, numbers have l= %d units going forward\n", l);
     print_arr(straight, ln2);
     free(straight);
   }
@@ -96,12 +103,12 @@ int check_bits(int l, int num, int straight){
 }
 
 
-void bits_in(int l, int k, int** arr, int* len, int* code, int flag){
+void bits_in(int l, int k, int** arr, int* len, int* code){
   int pred = num_bits(k - 1);
   int lim = num_bits(k);
   int size = 0;
   for (int i = pred; i < lim; i++){
-    if(check_bits(l, i, flag)){
+    if(check_bits(l, i, 0)){
       if(size == *len){
         size = size ? size*2 : 1;
         *arr = (int*)realloc(*arr, size*sizeof(int));
@@ -113,7 +120,29 @@ void bits_in(int l, int k, int** arr, int* len, int* code, int flag){
       (*arr)[(*len)++] = i;
     }
   }
-  *code = size ? (flag ? DONE_STRAIGHT : DONE_IN) : NOT_FOUND;
+  *code = size ? DONE_IN : NOT_FOUND;
+  return;
+}
+
+
+void bits_forward(int l, int k, int** arr, int* len, int* code){
+  int pred = num_bits(k - 1);
+  int lim = num_bits(k);
+  int size = 0;
+  for (int i = pred; i < lim; i++){
+    if(check_bits(l, i, 1)){
+      if(size == *len){
+        size = size ? size*2 : 1;
+        *arr = (int*)realloc(*arr, size*sizeof(int));
+        if(!*arr){
+          *code = NO_MEMORY;
+          return;
+        }
+      }
+      (*arr)[(*len)++] = i;
+    }
+  }
+  *code = size ? DONE_STRAIGHT : NOT_FOUND;
   return;
 }
 
