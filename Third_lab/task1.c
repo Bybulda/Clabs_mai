@@ -81,6 +81,7 @@ int main(){
   if (code == DONE){
     reverse(str);
     printf("\nSo number %d was traversed to %s in base 2^%d = %d\n", num, str, scale, 1<<scale);
+    free(str);
   }
   else if (code == NO_MEMORY){
     printf("\nNo memory, try again later!\n");
