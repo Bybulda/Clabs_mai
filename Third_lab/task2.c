@@ -126,10 +126,9 @@ void bits_in(int l, int k, int** arr, int* len, int* code){
 
 
 void bits_forward(int l, int k, int** arr, int* len, int* code){
-  int pred = num_bits(k - 1);
   int lim = num_bits(k);
   int size = 0;
-  for (int i = pred; i < lim; i++){
+  for (int i = 0; i < lim; i++){
     if(check_bits(l, i, 1)){
       if(size == *len){
         size = size ? size*2 : 1;

@@ -1,8 +1,8 @@
 # Hash - таблица
 $f: M -> N$, где н - конечное множество
-Для любого $n in N Ex m, f(m) = n$
+Для любого $n \in N, \exists x m, f(m) = n$
 f - хэш функция, причем не биективная
-$data in M, p = f(data) = f(key)$
+$\forall data \in M, p = f(data) = f(key)$
 хэш = ToDec(str) % size(это количество строк)
 ## Стандарт IPC (System V)
 очередь сообщений (msg)
@@ -15,7 +15,7 @@ $data in M, p = f(data) = f(key)$
 3. ... op
 
 #### Примеры
-```
+```c
 int desc;
 desc = msgget(150, IPC_CREAT|0760);
 struct msgbuf{

@@ -9,6 +9,43 @@ enum ERRORS {
   DONE = 0
 };
 
+int reverse(char* str);
+int traverse_num(char** str, int num, int r);
+
+
+int main(){
+  int scale, num, code = 0;
+  printf("Please enter the scale of the base to traverse number like 2^r, r = ");
+  code = scanf("%d", &scale);
+  if (code != 1){
+    printf("\nYou entered not an integer value\n");
+    return INPUT_ERROR;
+  }
+  printf("\nPlease enter a number to traverse, num = ");
+  code = scanf("%d", &num);
+  if (code != 1){
+    printf("\nPLease enter an integer number\n");
+    return INPUT_ERROR;
+  }
+  if (scale < 1 || scale > 5){
+    printf("\nThe r value must be in range [1, 5]\n");
+    return INPUT_ERROR;
+  }
+  char* str = NULL;
+  code = traverse_num(&str, num, scale);
+  if (code == DONE){
+    reverse(str);
+    printf("\nSo number %d was traversed to %s in base 2^%d = %d\n", num, str, scale, 1<<scale);
+    free(str);
+  }
+  else if (code == NO_MEMORY){
+    printf("\nNo memory, try again later!\n");
+    return NO_MEMORY;
+  }
+  return DONE;
+}
+
+
 int reverse(char* str){
     int ln = strlen(str);
     char* copy = str;
@@ -22,6 +59,7 @@ int reverse(char* str){
     }
     return DONE;
 }
+
 
 int traverse_num(char** str, int num, int r){
   char symb[] = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
@@ -55,37 +93,5 @@ int traverse_num(char** str, int num, int r){
     (*str)[real++] = '-';
   }
   (*str)[real] = '\0';
-  return DONE;
-}
-
-int main(){
-  int scale, num, code = 0;
-  printf("Please enter the scale of the base to traverse number like 2^r, r = ");
-  code = scanf("%d", &scale);
-  if (code != 1){
-    printf("\nYou entered not an integer value\n");
-    return INPUT_ERROR;
-  }
-  printf("\nPlease enter a number to traverse, num = ");
-  code = scanf("%d", &num);
-  if (code != 1){
-    printf("\nPLease enter an integer number\n");
-    return INPUT_ERROR;
-  }
-  if (scale < 1 || scale > 5){
-    printf("\nThe r value must be in range [1, 5]\n");
-    return INPUT_ERROR;
-  }
-  char* str = NULL;
-  code = traverse_num(&str, num, scale);
-  if (code == DONE){
-    reverse(str);
-    printf("\nSo number %d was traversed to %s in base 2^%d = %d\n", num, str, scale, 1<<scale);
-    free(str);
-  }
-  else if (code == NO_MEMORY){
-    printf("\nNo memory, try again later!\n");
-    return NO_MEMORY;
-  }
   return DONE;
 }
