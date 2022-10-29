@@ -46,20 +46,6 @@ int main(){
 }
 
 
-int reverse(char* str){
-    int ln = strlen(str);
-    char* copy = str;
-    char * pre = str + ln - 1;
-    while (copy < pre){
-        char buff = *copy;
-        *copy = *pre;
-        *pre = buff;
-        *copy++;
-        *pre--;
-    }
-    return DONE;
-}
-
 int lg(int num, int base){
   int start = 1, scale = 0;
   while(start < num){
