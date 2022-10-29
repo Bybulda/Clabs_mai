@@ -9,6 +9,7 @@ enum ERRORS {
   DONE = 0
 };
 
+int lg(int num, int base);
 int reverse(char* str);
 int traverse_num(char** str, int num, int r);
 
@@ -34,7 +35,6 @@ int main(){
   char* str = NULL;
   code = traverse_num(&str, num, scale);
   if (code == DONE){
-    reverse(str);
     printf("\nSo number %d was traversed to %s in base 2^%d = %d\n", num, str, scale, 1<<scale);
     free(str);
   }
@@ -60,38 +60,37 @@ int reverse(char* str){
     return DONE;
 }
 
+int lg(int num, int base){
+  int start = 1, scale = 0;
+  while(start < num){
+    scale++;
+    start<<=base;
+  }
+  return scale;
+}
+
 
 int traverse_num(char** str, int num, int r){
   char symb[] = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
   int bases[] = {0, 1, 3, 7, 15, 31};
-  int initial_size = 2, real = 0, ost;
-  *str = (char*)malloc(sizeof(char)*initial_size);
+  int flag = 0, ost;
+  if (num < 0){
+    flag++;
+    num = -num;
+  }
+  int initial_size = lg(num, r) + 1 + flag;
+  *str = (char*)calloc(initial_size, sizeof(char));
   if (!str){
     return NO_MEMORY;
   }
+  int real = initial_size - 2;
+  if(flag)
+    (*str)[0] = '-';
   while(num != 0){
     ost = num&bases[r];
-    if (initial_size == real){
-      initial_size <<= 1;
-      *str = (char*) realloc(*str, initial_size);
-      if (*str == NULL){
-        return NO_MEMORY;
-      }
-    }
-    (*str)[real] = symb[ost];
+    (*str)[real--] = symb[ost];
     num = num>>r;
-    real++;
   }
-  if (num < 0){
-    if (initial_size == real){
-      initial_size <<= 1;
-      *str = (char*) realloc(*str, initial_size);
-      if (*str == NULL){
-        return NO_MEMORY;
-      }
-    }
-    (*str)[real++] = '-';
-  }
-  (*str)[real] = '\0';
+  (*str)[initial_size - 1] = '\0';
   return DONE;
 }
