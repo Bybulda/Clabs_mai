@@ -6,7 +6,7 @@
 
 int num_bits(int k);
 long long factorial(int n);
-long long get_mem(int l, int k);
+int get_mem(int l, int k);
 int check_bits(int l, int num, int straight);
 void bits_in(int l, int k, int** arr, int* len, int* code);
 void bits_forward(int l, int k, int** arr, int* len, int* code);
@@ -42,7 +42,7 @@ int main(){
     return INPUT_ERROR;
   }
   if (k > 31){
-    printf("Overflow error!\n");
+    printf("Overflow");
     return INPUT_ERROR;
   }
   if (l > k){
@@ -68,7 +68,7 @@ int main(){
   check = 0;
   bits_forward(l, k, &straight, &ln2, &check);
   if (check == DONE_STRAIGHT){
-    printf("\nThe first array, numbers have l= %d units going forward\n", l);
+    printf("\nThe second array, numbers have l= %d units going forward\n", l);
     print_arr(straight, ln2);
     free(straight);
   }
@@ -112,36 +112,35 @@ int check_bits(int l, int num, int straight){
 
 void bits_in(int l, int k, int** arr, int* len, int* code){
   int lim = num_bits(k);
-  int size = 0;
+  int size = get_mem(l, k);
+  *arr = (int*)calloc(size, sizeof(int));
+  if (!*arr){
+    *code = NO_MEMORY;
+    return;
+  }
   for (int i = 0; i < lim; i++){
     if(check_bits(l, i, 0)){
-      if(size == *len){
-        size = size ? size*2 : 1;
-        *arr = (int*)realloc(*arr, size*sizeof(int));
-        if(!*arr){
-          *code = NO_MEMORY;
-          return;
-        }
-      }
       (*arr)[(*len)++] = i;
     }
   }
   *code = size ? DONE_IN : NOT_FOUND;
-  printf("%d size, %d peres\n", size, get_mem(l, k));
   return;
 }
 
 
 void bits_forward(int l, int k, int** arr, int* len, int* code){
   int lim = num_bits(k);
-  long long size = get_mem(l, k);
-  if (size == INPUT_ERROR){
-    *code = INPUT_ERROR;
-    return;
-  }
-  *arr = (int*)calloc(size, sizeof(int));
+  int size = 1;
   for (int i = 0; i < lim; i++){
     if(check_bits(l, i, 1)){
+      if (size - 1 == *len){
+        size<<=1;
+        *arr = (int*)realloc(*arr, size);
+        if (!*arr){
+          *code = NO_MEMORY;
+          return;
+        }
+      }
       (*arr)[(*len)++] = i;
     }
   }
@@ -166,7 +165,7 @@ long long factorial(int n){
     return (long long) n * factorial(n - 1);
 }
 
-long long get_mem(int l, int k){
+int get_mem(int l, int k){
   long long a = factorial(k), b = factorial(l), c = factorial(k - l);
-  return (long long) a / (b*c);
+  return (int) (a / (b*c));
 }
