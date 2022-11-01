@@ -16,9 +16,11 @@ typedef struct message{
   size_t id;
   char* str;
   size_t len;
+  size_t size;
 }message;
 
-
+int init_message(message** mess);
+int renew_mess(message** mess);
 int gen_symb(char** filename, int len);
 int prinr_messages(message*** mess, int len);
 int add_to_file(FILE* filename, message* mess);
@@ -27,29 +29,37 @@ int free_messages(char*** mess, int len);
 
 int main(int argc, char* argv[]){
   srand(time(NULL));
-  char c, del;
+  char chr, del;
+  message* mess = NULL;
+  message** post = NULL;
   int code, tries = 0;
   char suffix[] = ".CSV";
+  char* filename = NULL;
   if (argc <2 || argc > 2){
     printf("You need to start programm with one stop word!\n");
     return INPUT_ERROR;
   }
-  printf("Would you like to write some messages?!\ny/n?\n");
-  scanf("%с", &c);
-  // printf("%d\n", code);
-  while(1){
-    printf("%c\n", c);
-    if (tries == 3){
-      printf("\nYou are adopted mf!\n");
-      return DOLBOEB;
-    }
-    else if (c == 'y' || c == 'n')
-      break;
-    else{
-      printf("\nYou have %d more tries and then the app will be shut down\ny/n?\n", 3 - tries++);
-      scanf("%c", &c);
-    }
+  code = gen_symb(&filename, 10);
+  if (code == NO_MEMORY){
+    printf("No memory error, try again later!\n");
+    return NO_MEMORY;
   }
+  strcat(filename, suffix);
+  // printf("Would you like to write some messages?!\ny/n?\n");
+  // while(1){
+  //   code = scanf("%c%c", &del, &chr);
+  //   if (tries == 3){
+  //     printf("\nYou are adopted mf!\n");
+  //     return DOLBOEB;
+  //   }
+  //   else if (chr == 'y' || chr == 'n'){
+  //     break;
+  //   }
+  //   else{
+  //     printf("\nYou have %d more tries and then the app will be shut down\ny/n?\n", 3 - tries);
+  //     tries++;
+  //   }
+  // }
   return 0;
 }
 
@@ -59,14 +69,19 @@ int gen_symb(char** filename, int len){
   if (!*filename)
     return NO_MEMORY;
   int ver = 0, init = len - 1;
-  for(int i = 0; i < len; i++){
+  char symb;
+  for(int i = 0; i < init; i++){
     ver = rand() & 1;
     switch (ver) {
       case 0:
-        (*filename)[i] = rand()&31 + 65;
+        symb = rand()%26 + 97;
+        printf("%d\n", symb);
+        (*filename)[i] = symb;
         break;
       case 1:
-        (*filename)[i] = rand()&9 + 48;
+        symb = rand()%10 + 48;
+        printf("%d\n", symb);
+        (*filename)[i] = symb;
         break;
     }
   }
@@ -81,4 +96,22 @@ int prinr_messages(message*** mess, int len){
     printf("|%d|%s|\n", (*mess)[i]->id, (*mess)[i]->str);
   }
   return DONE;
+}
+
+int init_message(message** mess){
+  *mess = (message*)malloc(sizeof(message));
+  if(!*mess){
+    return NO_MEMORY;
+  }
+  (*mess)->id = 1;
+  (*mess)->size = 2;
+  (*mess)->len = 0;
+  return DONE;
+}
+
+int renew_mess(message** mess){
+  free((*mess)->str);
+  (*mess)->id++;
+  (*mess)->size = 2;
+  (*mess)->len = 0;
 }
