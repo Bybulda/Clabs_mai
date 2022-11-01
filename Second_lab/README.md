@@ -25,7 +25,7 @@ v) -c конкатенация со строкой, которая переда�
 | $e$   | $e = \lim\limits_{n\to\infty}(1+\frac{1}{n})^n$               | $e = \displaystyle\sum_{n=0}^{\infty} \frac{1}{n!}$                  | $\ln{x} = 1$   |
 | $\pi$ | $\pi = \lim\limits_{n\to\infty} \frac{(2^nn!)^4}{n((2n)!)^2}$ | $\pi = 4 \displaystyle\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{2n - 1}$ | $\cos{x} = -1$ |
 | $\ln{2}$ | $\ln{2} = \lim\limits_{n\to\infty} n(2^{\frac{1}{n}} - 1)$ | $\ln{2} = \displaystyle\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}$     |   $e^x = 2$    |
-| $\sqrt{2}$ |$\sqrt{2} = \lim\limits_{n\to\infty} x_n, где\\x_{n+1} = x_n - \frac{x_n^2}{2} + 1, \\x_0 = -0.5$ | $\sqrt{2} = \displaystyle\prod_{x=2}^{\infty} 2^{2^{-k}}$ | $x^2 = 2$ |
+| $\sqrt{2}$ |$\sqrt{2} = \lim\limits_{n\to\infty} x_n, где \\ x_{n+1} = x_n - \frac{x_n^2}{2} + 1, \\ x_0 = -0.5$ | $\sqrt{2} = \displaystyle\prod_{x=2}^{\infty} 2^{2^{-k}}$ | $x^2 = 2$ |
 | $\gamma$ | $\gamma = \lim\limits_{m\to\infty}\Big(\displaystyle\sum_{k=1}^{m}C_m^k\frac{(-1)^k}{k}\ln{(k!)}\Big)$ | $\gamma = -\frac{\pi^2}{6} + \displaystyle\sum_{k=2}^{\infty}\Big(\frac{1}{\sqrt{\lfloor k\rfloor}^2} - \frac{1}{k}\Big)$ | $e^-x = \lim\limits_{t\to\infty}\Big(\ln{t}\displaystyle\prod_{p \leq t, p\in P} \frac{p-1}{p}\Big)$ |
 
 4. I) Напишите функцию с переменным числом аргументов,
