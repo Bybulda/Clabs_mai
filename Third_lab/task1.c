@@ -64,10 +64,10 @@ int add(int num1, int num2){
 }
 
 int lg(int num, int base){
-  int start = 1, scale = 0;
-  while(start < num){
+  int scale = 0;
+  while(num>0){
     scale = add(scale, 1);
-    start<<=base;
+    num>>=base;
   }
   return scale;
 }
