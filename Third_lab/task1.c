@@ -12,7 +12,6 @@ enum ERRORS {
 int subtraction(int a, int b);
 int add(int num1, int num2);
 int lg(int num, int base);
-int reverse(char* str);
 int traverse_num(char** str, int num, int r);
 
 

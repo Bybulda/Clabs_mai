@@ -130,17 +130,15 @@ void bits_in(int l, int k, int** arr, int* len, int* code){
 
 void bits_forward(int l, int k, int** arr, int* len, int* code){
   int lim = num_bits(k);
-  int size = 1;
-  for (int i = 0; i < lim; i++){
+  int pred = num_bits(l) - 1;
+  int size = lim - pred;
+  *arr = (int*)malloc(size*sizeof(int));
+  if (!*arr){
+    *code = NO_MEMORY;
+    return;
+  }
+  for (int i = pred; i < lim; i++){
     if(check_bits(l, i, 1)){
-      if (size - 1 == *len){
-        size<<=1;
-        *arr = (int*)realloc(*arr, size);
-        if (!*arr){
-          *code = NO_MEMORY;
-          return;
-        }
-      }
       (*arr)[(*len)++] = i;
     }
   }
