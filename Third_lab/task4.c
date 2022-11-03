@@ -38,10 +38,10 @@ int main(int argc, char* argv[]) {
     int code, tries = 0, ids = 0;
     char suffix[] = ".CSV";
     char* filename = NULL;
-    //if (argc != 2) {
-    //    printf("You need to start programm with one stop word!\n");
-    //    return INPUT_ERROR;
-    //}
+    if (argc != 2) {
+       printf("You need to start programm with one stop word!\n");
+       return INPUT_ERROR;
+    }
     code = gen_symb(&filename, 10);
     if (code == NO_MEMORY) {
         printf("No memory error, try again later!\n");
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
         if (file == NULL) {
             return FILE_ERROR;
         }
-        code = add_to_file(file, &mess, "stop", &ids);
+        code = add_to_file(file, &mess, argv[1], &ids);
         fclose(file);
         file = fopen(filename, "r");
         code = from_file_to_msg(file, &post, ids);
