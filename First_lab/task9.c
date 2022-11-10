@@ -5,6 +5,22 @@
 #include "stdlib.h"
 
 
+enum ERRORS{
+  NO_MEMORY = -1,
+  WRONG_INPUT = -2,
+  OVERFLOW = -3
+};
+
+char* reallocate(char* str, int size){
+  char* tmp = (char*)realloc(str, size*sizeof(char));
+  free(str);
+  if (!tmp){
+    return NULL;
+  }
+  return tmp;
+
+}
+
 int toi(char *s, int base){
     int n = 0, neg = 1;
     for(int i = 0; s[i] != '\0'; i++){
@@ -23,30 +39,15 @@ int toi(char *s, int base){
 
 
 int main(int argc, char *argv[]) {
-    int n;
-//    printf("%d\n", argc);
-    if (argc<4){
-        printf("U must enter a number and a flag!\nExample: <number> </q or -q>\n");
+    int base, flag = 1, len = 0, bf_size = 2;
+    char* buff = NULL;
+    if (scanf("%d", &base) != 1){
+      printf("Wrong input!\n");
+      return WRONG_INPUT;
     }
-    else if (argc == 5 && (!strcmp(argv[1], "-q") || !strcmp(argv[1], "/q"))){
-        n = toi(argv[1]);
-//        kratn(n);
-    }
-    else if (argc == 4 && (!strcmp(argv[1], "-m") || !strcmp(argv[1], "/m"))){
-        if (int_or_float(argv[2]) && int_or_float(argv[3])){
-            kratn(toi(argv[2]), toi(argv[3]));
-        }
-        else{
-            printf("You cant use float numbers bro!\n");
-            exit(0);
-        }
+    printf("\nPlease, enter numbers, if you want to stop - enter \"Stop\"\n");
+    while(flag){
 
-    }
-    else if (argc == 5 && (!strcmp(argv[1], "-t") || !strcmp(argv[1], "/t"))){
-        if_triangle(toi(argv[2]), toi(argv[3]), toi(argv[4]));
-    }
-    else{
-        printf("Something went wrong, try again pls\n");
     }
     return 0;
 }

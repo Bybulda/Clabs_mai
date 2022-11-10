@@ -1,0 +1,108 @@
+#include "task7.h"
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+
+int list_init(civ_node** node){
+  *node = (civ_node*)malloc(sizeof(civ_node));
+  if (!*node){
+    return NO_MEMORY;
+  }
+  (*node)->civ = (civilian*)malloc(sizeof(civilian));
+  if(!(*node)->civ){
+    return NO_MEMORY;
+  }
+  (*node)->next = NULL;
+  return DONE;
+}
+
+int del_civ(civilian** civ){
+  free((*civ)->name);
+  free((*civ)->surname);
+  free((*civ)->patronymic);
+  free((*civ)->birth_date);
+  free(*civ);
+  return DONE;
+}
+
+int list_destroy(civ_node** civ){
+  civ_node* next = NULL;
+  while (*civ){
+    next = (*civ)->next;
+    del_civ(&((*civ)->civ));
+    free(*civ);
+    *civ = next;
+  }
+  return DONE;
+}
+
+int node_del(civ_node** head, int pos, int size){
+  int code = pos_el(size, pos);
+  civ_node* next = *head;
+  if (code == INPUT_ERROR)
+    return INPUT_ERROR;
+  if (code == 1){
+    while(--pos != 1){
+      next = next->next;
+    }
+    civ_node* create = next->next->next;
+    del_civ(&(next->next->civ));
+    free(next->next);
+    next->next = create;
+  }
+  else if(code == -1){
+    list_destroy(head);
+  }
+  else{
+    while(--pos != 1){
+      next = next->next;
+    }
+    del_civ(&(next->next->civ));
+    free(next->next);
+    next->next = NULL;
+  }
+  return DONE;
+}
+
+int node_add(civ_node** head, civ_node** el){
+  civ_node* next = *head;
+  civ_node* tmp = NULL;
+  char* b1 = (*el)->civ->birth_date;
+  char* b2 = next->civ->birth_date;
+  int count = 0;
+  while (cmp_age(b1, b2) && next->next != NULL){
+    next = next->next;
+    b2 = next->civ->birth_date;
+    count++;
+  }
+  if (count == 0){
+    (*el)->next = next:
+    *head = *el;
+  }
+  else if (!next->next){
+    next->next = *el;
+  }
+  else{
+    tmp = next->next;
+    next->next = *el;
+    (*el)->next = tmp;
+  }
+  return DONE;
+
+}
+
+int pos_el(int size, int pos){
+  if (pos < 0 || pos > size)
+    return INPUT_ERROR;
+  if (pos < size && pos > 0)
+    return 1;
+  return (pos == size && size != 1) - 1;
+}
+
+int cmp_age(char* b1, char* b2){
+  int flag = -1;
+  return flag;
+}

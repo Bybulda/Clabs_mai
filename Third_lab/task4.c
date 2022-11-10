@@ -204,9 +204,13 @@ int from_file_to_msg(FILE* filename, message*** mess, int size) {
             }
             if (bf_size == ln) {
                 bf_size <<= 1;
-                buf = (char*)realloc(buf, bf_size * sizeof(char));
-                if (!buf)
+                char* temp;
+                if (!(temp = (char*)realloc(buf, bf_size * sizeof(char)))
+                {
+                  free(buf);
                     return NO_MEMORY;
+                }
+                buf = temp;
             }
             buf[ln++] = c;
         }
@@ -241,5 +245,6 @@ int free_messages(message*** mess, int len) {
         free((*mess)[i]);
     }
     free(*mess);
+    *mess = NULL;
     return DONE;
 }

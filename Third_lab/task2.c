@@ -113,12 +113,13 @@ int check_bits(int l, int num, int straight){
 void bits_in(int l, int k, int** arr, int* len, int* code){
   int lim = num_bits(k);
   int size = get_mem(l, k);
+  int pred = num_bits(l) - 1;
   *arr = (int*)calloc(size, sizeof(int));
   if (!*arr){
     *code = NO_MEMORY;
     return;
   }
-  for (int i = 0; i < lim; i++){
+  for (int i = pred; i < lim; i++){
     if(check_bits(l, i, 0)){
       (*arr)[(*len)++] = i;
     }
