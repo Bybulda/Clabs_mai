@@ -8,7 +8,6 @@ enum ERRORS {
     NO_MEMORY = -1,
     INPUT_ERROR = -2,
     DONE = 0,
-    DOLBOEB = -7,
     FILE_ERROR = -3,
     HANDLED = -4
 };
@@ -153,18 +152,17 @@ int add_to_file(FILE* filename, message** mess, char* stop_word, int* size) {
             (*mess)->str[(*mess)->len] = '\0';
             if (!strcmp((*mess)->str, stop_word)) {
                 flag = 0;
-                *size = (*mess)->id - 1;
+                *size = (*mess)->id;
                 free((*mess)->str);
                 free((*mess));
                 if (init_message(mess) == NO_MEMORY)
                     return NO_MEMORY;
+                break;
             }
-            else {
-                fprintf(filename, "%d,", (*mess)->id);
-                fprintf(filename, "\"%s\"\n", (*mess)->str);
-                if (renew_mess(mess) == NO_MEMORY)
-                    return NO_MEMORY;
-            }
+            fprintf(filename, "%d,", (*mess)->id);
+            fprintf(filename, "\"%s\"\n", (*mess)->str);
+            if (renew_mess(mess) == NO_MEMORY)
+                return NO_MEMORY;
         }
     }
     return DONE;
@@ -176,6 +174,9 @@ int from_file_to_msg(FILE* filename, message*** mess, int size) {
     char c;
     char* buf = NULL;
     *mess = (message**)malloc(size * sizeof(message*));
+    if (!*mess){
+      return NO_MEMORY;
+    }
     while ((c = fgetc(filename)) != EOF) {
         if (c == ',' && del) {
             init_message(&(*mess)[curr]);
@@ -205,7 +206,7 @@ int from_file_to_msg(FILE* filename, message*** mess, int size) {
             if (bf_size == ln) {
                 bf_size <<= 1;
                 char* temp;
-                if (!(temp = (char*)realloc(buf, bf_size * sizeof(char)))
+                if (!(temp = (char*)realloc(buf, bf_size * sizeof(char))))
                 {
                   free(buf);
                     return NO_MEMORY;

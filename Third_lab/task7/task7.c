@@ -79,7 +79,7 @@ int node_add(civ_node** head, civ_node** el){
     count++;
   }
   if (count == 0){
-    (*el)->next = next:
+    (*el)->next = next;
     *head = *el;
   }
   else if (!next->next){
@@ -100,6 +100,63 @@ int pos_el(int size, int pos){
   if (pos < size && pos > 0)
     return 1;
   return (pos == size && size != 1) - 1;
+}
+
+int from_file_to_list(FILE* fin, civ_node** head){
+  char* buf = NULL, tmp;
+  int len = 0, size = 2, posl = 0;
+  char c = fgetc(fin);
+  if(list_init(head) == NO_MEMORY){
+    return NO_MEMORY;
+  }
+  civ_node* curr = NULL;
+  civ_node* pred = *head;
+  while(c != EOF){
+    if (c == ' '){
+      switch (posl) {
+        case 0:
+
+      }
+    }
+    else if(c == '\n'){
+      if (size == len){
+        tmp = buf;
+        tmp = (char*)realloc(buf, size+1);
+        free(buf);
+        if (!tmp){
+          return NO_MEMORY;
+        }
+        buf = tmp;
+      }
+      buf[len] = '\0';
+      curr->civ->salary = atof(buf);
+      free(buf);
+      pred->next = curr;
+      pred = pred->next;
+      curr = NULL;
+      if (list_init(&curr) = NO_MEMORY){
+        return NO_MEMORY;
+      }
+      buf = NULL;
+      len = 0;
+      size = 2;
+      posl = 0;
+    }
+    else{
+      if (size == len){
+        tmp = buf;
+        size<<=1;
+        tmp = (char*)realloc(buf, size);
+        free(buf);
+        if (!tmp){
+          return NO_MEMORY;
+        }
+        buf = tmp;
+      }
+      buf[len++] = c;
+    }
+    c = fgetc;
+  }
 }
 
 int cmp_age(char* b1, char* b2){
