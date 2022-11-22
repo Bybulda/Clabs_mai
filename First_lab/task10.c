@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <math.h>
 
 
 enum ERRORS{
@@ -16,12 +17,13 @@ typedef struct matrix{
     int** matr;
     int n;
     int m;
-    int det;
+    double det;
 }matrix;
 
 void matrix_print(matrix* matr);
 void fill_matrix(matrix** matr);
 void destroy_matrix(matrix** matr);
+int GaussDet(matrix** matr);
 int create_matrix(matrix** matr);
 int multiply_matrix(matrix** matr1, matrix** matr2, matrix** result);
 int count_det(matrix** matr);
@@ -67,6 +69,12 @@ int main() {
     matrix_print(res);
     destroy_matrix(&matr1);
     destroy_matrix(&matr2);
+    if (GaussDet(&res) == BAD_OPERATION){
+      printf("Could not find determinant!\n");
+      destroy_matrix(&res);
+      return BAD_OPERATION;
+    }
+    printf("Determinant of result matrix is %lf\n", res->det);
     destroy_matrix(&res);
     return 0;
 }
@@ -77,7 +85,7 @@ void matrix_print(matrix* matr){
     for(int i = 0; i < n; i++){
         for (int j = 0; j < m; j++)
         {
-            printf("%d ", matr->matr[i][j]);
+            printf("%d\t", matr->matr[i][j]);
         }
         printf("\n");
     }
@@ -104,7 +112,7 @@ int create_matrix(matrix** matr){
 
 
 void fill_matrix(matrix** matr){
-    int n = (*matr)->n, m = (*matr)->m; 
+    int n = (*matr)->n, m = (*matr)->m;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < m; j++)
@@ -151,11 +159,42 @@ int multiply_matrix(matrix** matr1, matrix** matr2, matrix** result){
                     res += (*matr1)->matr[i][k]*(*matr2)->matr[k][j];
                 }
                 (*result)->matr[i][j] = res;
-                
+
             }
-            
+
         }
         return DONE;
     }
     return BAD_OPERATION;
+}
+
+int GaussDet(matrix** matr){
+  if ((*matr)->n != (*matr)->m)
+    return BAD_OPERATION;
+  int** m = (*matr)->matr;
+  int n = (*matr)->n;
+  double det = 1;
+  for(int i = 0; i < n; ++i){
+        double mx = fabs(m[i][i]);
+        int idx = i;
+        for(int j = i+1; j < n; ++j)
+            if (mx < fabs(m[i][j])) mx = fabs(m[i][idx = j]);
+        if (idx != i){
+            for(int j = i; j < n; ++j){
+                double t = m[j][i];
+                m[j][i] = m[j][idx];
+                m[j][idx] = t;
+            }
+            det = -det;
+        }
+        for(int k = i+1; k < n; ++k){
+            double t = m[k][i]/m[i][i];
+
+            for(int j = i; j < n; ++j)
+                m[k][j] -= m[i][j]*t;
+        }
+    }
+  for(int i = 0; i < n; ++i) det *= m[i][i];
+  (*matr)->det = det;
+  return DONE;
 }
