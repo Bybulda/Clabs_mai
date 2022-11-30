@@ -1,192 +1,121 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
-#include <ctype.h>
 #include <stdarg.h>
 
+
 enum ERRORS {
-	INVALID_NUMBER = -1,
-	SUCCES = -2,
-	NO_MEMORY = -3
+  NO_MEMORY = -1,
+  INPUT_ERROR = -2,
+  DONE = 0
 };
 
-#define max(a, b) ((a > b) ? (a) : (b))
+int sum_char(char a, char b);
+int overflow(int base, char a, char b);
+int increase(char** str, int ln);
+int squeeze(char* (*str1), int ln);
+int sum_two(char** str1, char* str2, int base);
+int sum_all(char** buff, int base, int n, ...);
 
-bool is_valid_number(char *number, int notation);
-int sum_notation(char **res, char *number_1, char *number_2, int notation);
-int sum_numbers(char **res, int notation, int count, ...);
-char *remove_leading_zeros(char *res);
-
-int main() {
-	char *number_1 = "111ABC";
-	char *number_2 = "abe";
-	char *number_3 = "10111";
-	char *sum = NULL;
-	int notation = 16;
-	int exit_code = sum_numbers(&sum, 16, 3, number_1, number_2, number_3);
-
-	if (exit_code == SUCCES) {
-		sum = remove_leading_zeros(sum);
-		printf("%s\n", sum);
-		free(sum);
-	} else {
-		if (exit_code == INVALID_NUMBER) {
-			fprintf(stderr, "%s\n", "Some number is written in the wrong number system");
-		}
-		if (exit_code == NO_MEMORY) {
-			fprintf(stderr, "%s\n", "No memory");
-		}
-	}
-
-	return 0;
+int main(){
+    // int base = 2, check = 1;
+    // printf("Please enter the base of numbers in range [2, 32]!\n");
+    // if (!scanf("%d", &base)){
+    //   printf("Incorrect base!\n");
+    //   return INPUT_ERROR;
+    // }
+    char* bf = NULL;
+    if(sum_all(&bf, 2, 2, "11", "1011") == DONE){
+        printf("%s", bf);
+        free(bf);
+    }
+    return DONE;
 }
 
-bool is_valid_number(char *number, int notation) {
-	char *ptr = number;
-	int value_digit = 0;
 
-	while (*ptr) {
-		value_digit = isalpha(*ptr) ? toupper(*ptr) - 'A' + 10 : *ptr - '0';
-		if (value_digit >= notation) {
-			return false;
-		}
-		ptr++;
-	}
-
-	return true;
+int sum_two(char** str1, char* str2, int base){
+    int ln1 = strlen(*str1), ln2 = strlen(str2);
+    char* tmp = NULL;
+    char* clear = *str1;
+    if (ln1 > ln2){
+        tmp = (char*)realloc(tmp, (ln1 + 2)*sizeof(char));
+        if (!tmp){
+            return NO_MEMORY;
+        }
+        tmp[0] = '0';
+        tmp[ln1 + 1] = 0;
+        int counter = ln1, remainder = 0, numeric;
+        for(int i = ln1 - 1, j = ln2 - 1; j > -1;){
+            numeric = sum_char((*str1)[i], str2[j]) + remainder;
+            remainder = numeric / base;
+            numeric = numeric % base;
+            tmp[counter--] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
+            i--;
+            j--;
+        }
+        for (int i = counter; i > -1; i--){
+            tmp[i] = (*str1)[i];
+        }
+    }    
+    else{
+        tmp = (char*)malloc((ln2 + 2)*sizeof(char));
+        if (!tmp){
+            return NO_MEMORY;
+        }
+        tmp[0] = '0';
+        tmp[ln2 + 1] = 0;
+        int counter = ln2, remainder = 0, numeric;
+        for(int i = ln1 - 1, j = ln2 - 1; i > -1;){
+            numeric = sum_char((*str1)[i], str2[j]) + remainder;
+            remainder = numeric / base;
+            numeric = numeric % base;
+            tmp[counter--] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
+            i--;
+            j--;
+        }
+        for (int i = counter; i > -1;){
+            tmp[i] = str2[i];
+            i--;
+        }
+        
+    }
+    free(*str1);
+    *str1 = NULL;
+    *str1 = tmp;
+    return DONE;
 }
 
-int sum_notation(char **res, char *number_1, char *number_2, int notation) {
-	if (!number_1) {
-		*res = (char*)malloc(sizeof(char) * strlen(number_2));
-		if (*res) {
-			strcpy(*res, number_2);
-		} else {
-			return NO_MEMORY;
-		}
-	} else {
-		if (!number_2) {
-			*res = (char*)malloc(sizeof(char) * strlen(number_1));
-			if (*res) {
-				strcpy(*res, number_1);
-			} else {
-				return NO_MEMORY;
-			}
-		} else {
-			free(*res);
-			int size = max(strlen(number_1), strlen(number_2)) + 2;
-			*res = (char*)malloc(sizeof(char*) * size);
-			char *ptr = *res + size;
-			char *ptr_1 = number_1 + strlen(number_1) - 1;
-			char *ptr_2 = number_2 + strlen(number_2) - 1;
-			int value_digit_1 = 0;
-			int value_digit_2 = 0;
-			int temp = 0;
-			int remainder = 0;
-			*ptr-- = 0;
 
-			if (!*res) {
-				return NO_MEMORY;
-			}
-
-			for (int i = 0; i < size; i++) {
-				(*res)[i] = '0';
-			}
-
-			while (ptr_1 - number_1 >= 0 && ptr_2 - number_2 >= 0) {
-				value_digit_1 = isalpha(*ptr_1) ? toupper(*ptr_1) - 'A' + 10 : *ptr_1 - '0';
-				value_digit_2 = isalpha(*ptr_2) ? toupper(*ptr_2) - 'A' + 10 : *ptr_2 - '0';
-				temp = (value_digit_1 + value_digit_2 + remainder) % notation;
-				remainder = (value_digit_1 + value_digit_2) / notation;
-				*ptr-- =  temp > 9 ? temp + 'A' - 10 : temp + '0';
-				ptr_1--;
-				ptr_2--;
-			}
-
-			if (ptr_1 - number_1 >= 0) {
-				while (ptr_1 - number_1 >= 0) {
-					value_digit_1 = isalpha(*ptr_1) ? toupper(*ptr_1) - 'A' + 10 : *ptr_1 - '0';
-					temp = (value_digit_1 + remainder) % notation;
-					remainder = (value_digit_1 + remainder) / notation;
-					*ptr-- =  temp > 9 ? temp + 'A' - 10 : temp + '0';
-					ptr_1--;
-				}
-			}
-
-			if (ptr_2 - number_2 >= 0) {
-				while (ptr_2 - number_2 >= 0) {
-					value_digit_2 = isalpha(*ptr_2) ? toupper(*ptr_2) - 'A' + 10 : *ptr_2 - '0';
-					temp = (value_digit_2 + remainder) % notation;
-					remainder = (value_digit_2 + remainder) / notation;
-					*ptr-- =  temp > 9 ? temp + 'A' - 10 : temp + '0';
-					ptr_2--;
-				}
-			}
-
-			if (remainder != 0) {
-				*ptr-- = remainder + '0';
-			}
-		}
-	}
-
-	return SUCCES;
+int sum_all(char** buff, int base, int n, ...){
+    if (n <= 0 || (base < 2 && base > 32)){
+      return INPUT_ERROR;
+    }
+    char* tmp = NULL;
+    va_list l;
+    va_start(l, n);
+    for (int i = 0; i < n; i++) {
+        if (!i){
+          tmp = va_arg(l, char*);
+          *buff = (char*)realloc(*buff, strlen(tmp)*sizeof(char));
+          if (!(*buff)){
+            return NO_MEMORY;
+          }
+          strcpy(*buff, tmp);
+          tmp = NULL;
+        }
+        else{
+          tmp = va_arg(l, char*);
+          if(sum_two(buff, tmp, base) == NO_MEMORY){
+            return NO_MEMORY;
+          }
+        }
+    }
+    return DONE;
 }
 
-int sum_numbers(char **res, int notation, int count, ...) {
-	char *number = NULL;
-	char *temp = NULL;
-	char *temp_res = NULL;
-	int exit_code = 0;
-	va_list arg;
-	va_start(arg, count);
 
-	for (int i = 0; i < count; i++) {
-		number = va_arg(arg, char*);
-		if (is_valid_number(number, notation)) {
-			exit_code = sum_notation(res, temp, number, notation);
-			if (exit_code == SUCCES) {
-				if (temp) {
-					free(temp);
-				}
-				temp = (char*)malloc(sizeof(char) * strlen(*res));
-				if (!temp) {
-					return NO_MEMORY;
-				}
-				strcpy(temp, *res);
-			} else {
-				return exit_code;
-			}
-		} else {
-			return INVALID_NUMBER;
-		}
-	}
-
-	va_end(arg);
-
-	free(temp);
-
-	return SUCCES;
-}
-
-char *remove_leading_zeros(char *res) {
-	char *ptr = res;
-	char *str = NULL;
-	int index = 0;
-
-	while (*ptr == '0') {
-		ptr++;
-		index++;
-	}
-
-	str = (char*)malloc(sizeof(char) * (strlen(res) - index));
-	char *ptr_str = str;
-
-	while (*ptr) {
-		*ptr_str++ = *ptr++;
-	}
-
-	free(res);
-
-	return str;
+int sum_char(char a, char b){
+    return (isdigit(a) ? a - '0' : 'A' - a + 10) + (isdigit(b) ? b - '0' : 'A' - b + 10); 
 }
