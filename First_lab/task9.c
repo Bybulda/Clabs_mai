@@ -12,60 +12,29 @@ enum ERRORS{
   DONE = 0
 };
 
-int reverse(char* str){
-    int ln = strlen(str);
-    char* copy = str;
-    char * pre = str + ln - 1;
-    while (copy < pre){
-        char buff = *copy;
-        *copy = *pre;
-        *pre = buff;
-        *copy++;
-        *pre--;
-    }
-    return 0;
-}
 
 int traverse_num(char** str, int num, int base){
-  int ost = base - 1, init = 2, len = 0, del = 0;
+  int ost = base - 1, init = 33, len = 31, del = 0, size = 0;
   char* tmp = NULL;
   free(*str);
-  *str = (char*)malloc(init*sizeof(char));
+  *str = (char*)calloc(init, sizeof(char));
   if (!*str){
     return NO_MEMORY;
   }
+  tmp = (*str) + len;
   while(num){
     del = num%base;
-    if (len == init){
-      init<<=1;
-      tmp = (char*)realloc(*str, init);
-      if (!tmp){
-        free(*str);
-        return NO_MEMORY;
-      }
-      *str = tmp;
-    }
-    (*str)[len++] = del > 9 ? del - 10 + 'A' : '0' + del;
+    (*str)[len--] = del > 9 ? del - 10 + 'A' : '0' + del;
     num = num / base;
+    size++;
+    tmp--;
   }
-  if (len == init){
-      init++;
-      tmp = (char*)realloc(*str, init);
-      if (!tmp){
-        free(*str);
-        return NO_MEMORY;
-      }
-      *str = tmp;
-    }
-  (*str)[len] = '\0';
-  reverse(*str);
+  tmp++;
+  strcpy((*str), tmp);
   return DONE;
 }
 
 int reversed_toi(char *s, int base, int size){
-    if (base < 2 || base > 32){
-      return WRONG_INPUT;
-    }
     int n = 0, index = size;
     int tmp = 1;
     while(index-- != 0){
@@ -119,8 +88,9 @@ int main(int argc, char *argv[]) {
     int base, flag = 1, max = 0, num = 0, size = 0;
     char* buff = NULL;
     char* str_num = NULL;
+    char del;
     printf("Please, enter the base of the system in range [2, 36]: ");
-    if (scanf("%d", &base) != 1){
+    if (scanf("%d%c", &base, &del) != 2){
       printf("Wrong input!\n");
       return WRONG_INPUT;
     }
@@ -144,6 +114,7 @@ int main(int argc, char *argv[]) {
       buff = NULL;
       }
     }
+  printf("Max number in system 10 = %d\n", max);
   traverse_num(&buff, max, 9);
   printf("Max number in system 9 = %s\n", buff);
   traverse_num(&buff, max, 18);

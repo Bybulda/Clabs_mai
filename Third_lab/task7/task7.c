@@ -113,10 +113,7 @@ int from_file_to_list(FILE* fin, civ_node** head){
   civ_node* pred = *head;
   while(c != EOF){
     if (c == ' '){
-      switch (posl) {
-        case 0:
-
-      }
+      /**/
     }
     else if(c == '\n'){
       if (size == len){
@@ -161,5 +158,6 @@ int from_file_to_list(FILE* fin, civ_node** head){
 
 int cmp_age(char* b1, char* b2){
   int flag = -1;
+  char*
   return flag;
 }

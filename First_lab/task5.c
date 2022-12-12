@@ -2,132 +2,92 @@
 #include "string.h"
 #include "stdlib.h"
 #include "ctype.h"
-#define SEP(sep) ((sep == ' ' || sep == '\n' || sep == '\t'))
 
 enum ERRORS {
   NO_MEMORY = -1,
   INPUT_ERROR = -2,
   FILE_ERROR = -3,
-  DONE = 0,
-  HANDLE = 1
+  DONE = 2,
+  HANDLE = 3
+};
+
+enum MODES{
+    IN_FILE = 0,
+    STDIN_INP = 1,
+    ARGV_INP = 2
 };
 
 int handler(int code);
-int get_str(char** buf, int* flag);
-int fget_str(FILE* fin, char** buf, int* flag);
-int file_infiles(FILE *fin, FILE* fout);
-int file_infiles(FILE *fin, FILE* fout);
-int stdin_input(FILE* fout);
-int from_argv(FILE* fout, char* argv[], int size);
+int take_chars(FILE* fin, FILE* fout, char* argv[], int size, const int mode);
+int read_files(FILE*** file, FILE* fout, int len);
+int get_str(char** buf, FILE* fin, int *flag);
 
 
 int main(int argc, char *argv[]) {
     FILE* fin = NULL;
     FILE* fout = NULL;
+    char* words[] = {"\nSORRY, could not open a file!\n", "\nSORRY not enough arguments\n", "\nIts Done!\n", "\n"};
     fout = fopen("to_file.txt", "w");
     int flag;
     if (!fout || argc < 2){
-        argc < 2 ? printf("\nSORRY not enough arguments\n") : printf("\nSORRY, could not open a file!\n");
+        printf("%s", words[argc < 2]);
         return HANDLE;
     }
     if (argc == 3 && !strcmp(argv[1], "-fi")) {
         if((fin = fopen(argv[2], "r")) != NULL){
-            flag = handler(file_infiles(fin, fout));
+            flag = handler(take_chars(fin, fout, NULL, 0, IN_FILE));
             fclose(fin);
-            flag == DONE ? printf("\nIts Done!\n") : printf("\n");
+            printf("%s", words[flag]);
             
         }
         else{
-            printf("\nSORRY, could not open a file!\n");
+            printf("%s", words[0]);
             return FILE_ERROR;
         }
     }
     else if (!strcmp(argv[1], "-cin")){
-        flag = handler(stdin_input(fout));
-        flag == DONE ? printf("\nIts Done!\n") : printf("\n");
+        flag = handler(take_chars(NULL, fout, NULL, 0, STDIN_INP));
+        printf("%s", words[flag]);
     }
     else if (!strcmp(argv[1], "-arg")){
-        flag = handler(from_argv(fout, argv, argc));
-        flag == DONE ? printf("\nIts Done!\n") : printf("\n");
+        flag = handler(take_chars(NULL, fout, argv, argc, ARGV_INP));
+        printf("%s", words[flag]);
     }
     fclose(fout);
     return flag;
 }
 
 
-int file_infiles(FILE *fin, FILE* fout){
+int take_chars(FILE* fin, FILE* fout, char* argv[], int size, const int mode){
     int fsize = 2, flag = 1, capture = 0, actual = 0, curr = 0, c;
     char* buff = NULL;
-    FILE* file = NULL;
-    FILE** files = (FILE**)malloc(fsize*sizeof(FILE*));
+    char* mess[] = {"\nGetting chars from files in a file!\n", "\nPlease enter filenames! If you want to stop, enter \"stop\"!\n", "\nGetting chars from argv!\n"};
+    FILE** files = NULL;
     FILE** tmp = NULL;
-    if (!files){
-        return NO_MEMORY;
-    }
-    while (flag){
-        fget_str(fin, &buff, &flag);
-        if((file = fopen(buff, "r")) == NULL){
-            free(files);
-            return FILE_ERROR;
+    FILE* file = NULL;
+    printf("%s", mess[mode]);
+    if (mode == ARGV_INP){
+        actual = size - 2;
+        files = (FILE**)malloc(actual*sizeof(FILE*));
+        if (!files){
+            return NO_MEMORY;
         }
-        if (actual == fsize){
-            fsize<<=1;
-            tmp = (FILE**)realloc(files, (fsize)*sizeof(FILE*));
-            if (!tmp){
-                free(files);
-                return NO_MEMORY;
+        for(int i = 2; i < size; i++){
+            if ((file = fopen(argv[i], "r")) == NULL)
+                return FILE_ERROR;
+            files[i-2] = file;
+        }
+    }
+    else{
+        files = (FILE**)malloc(fsize*sizeof(FILE*));
+        if (!files){
+            return NO_MEMORY;
+        }
+        while (flag){
+            get_str(&buff, fin, &flag);
+            if (mode == STDIN_INP && !strcmp(buff, "stop")){
+                break;
             }
-            files = tmp;
-        }
-        free(buff);
-        buff = NULL;
-        files[actual++] = file;
-    }
-    tmp = (FILE**)realloc(files, actual*sizeof(FILE*));
-    if (!tmp){
-        free(files);
-        return NO_MEMORY;
-    }
-    files = tmp;
-    while (capture != actual)
-    {
-        if(curr == actual){
-            curr = 0;
-            capture = 0;
-        }
-        if (files[curr] == NULL){
-            capture++;
-        }
-        else if ((c = fgetc(files[curr])) != EOF){
-            fputc(c, fout);
-        }
-        else{
-            fclose(files[curr]);
-            files[curr] = NULL;
-        }
-        curr++;
-    }
-    free(files);
-    return DONE;
-}
-
-
-int stdin_input(FILE* fout){
-    int fsize = 2, flag = 1, capture = 0, actual = 0, curr = 0, c;
-    char* buff = NULL;
-    FILE* file = NULL;
-    FILE** files = (FILE**)malloc(fsize*sizeof(FILE*));
-    FILE** tmp = NULL;
-    if (!files){
-        return NO_MEMORY;
-    }
-    while (flag){
-        get_str(&buff, &flag);
-        if (!strcmp(buff, "stop"))
-        {
-            flag = 0;
-        }
-        else{
             if((file = fopen(buff, "r")) == NULL){
                 free(files);
                 return FILE_ERROR;
@@ -145,72 +105,21 @@ int stdin_input(FILE* fout){
             buff = NULL;
             files[actual++] = file;
         }
-        
+        tmp = (FILE**)realloc(files, actual*sizeof(FILE*));
+        if (!tmp){
+            free(files);
+            return NO_MEMORY;
+        }
+        files = tmp;
     }
-    tmp = (FILE**)realloc(files, actual*sizeof(FILE*));
-    if (!tmp){
-        free(files);
-        return NO_MEMORY;
-    }
-    files = tmp;
-    while (capture != actual)
-    {
-        if(curr == actual){
-            curr = 0;
-            capture = 0;
-        }
-        if (files[curr] == NULL){
-            capture++;
-        }
-        else if ((c = fgetc(files[curr])) != EOF){
-            fputc(c, fout);
-        }
-        else{
-            fclose(files[curr]);
-            files[curr] = NULL;
-        }
-        curr++;
-    }
+    read_files(&files, fout, actual);
     free(files);
     return DONE;
 }
 
 
-int from_argv(FILE* fout, char* argv[], int size){
-    int actual = size - 1, capture = 0, curr = 0;
-    char c;
-    FILE* file = NULL;
-    FILE** files = (FILE**)malloc(actual*sizeof(FILE*));
-    for(int i = 1; i < size; i++){
-        if ((file= fopen(argv[i], "r")) == NULL)
-            return FILE_ERROR;
-        files[i-1] = file;
-    }
-    while (capture != actual)
-    {
-        if(curr == actual){
-            curr = 0;
-            capture = 0;
-        }
-        if (files[curr] == NULL){
-            capture++;
-        }
-        else if ((c = fgetc(files[curr])) != EOF){
-            fputc(c, fout);
-        }
-        else{
-            fclose(files[curr]);
-            files[curr] = NULL;
-        }
-        curr++;
-    }
-    free(files);
-    return DONE;
-}
-
-
-int get_str(char** buf, int* flag){
-  char c = getchar();
+int get_str(char** buf, FILE* fin, int *flag){
+  char c = (fin == NULL ? getchar() : fgetc(fin));
   char* tmp = NULL;
   int initial_size = 2, len = 0;
   *buf = (char*)malloc(initial_size*sizeof(char));
@@ -228,7 +137,7 @@ int get_str(char** buf, int* flag){
       *buf = tmp;
     }
     (*buf)[len++] = c;
-    c = getchar();
+    c = (fin == NULL ? getchar() : fgetc(fin));
   }
   if (len == initial_size){
     initial_size++;
@@ -240,43 +149,33 @@ int get_str(char** buf, int* flag){
     *buf = tmp;
   }
   (*buf)[len] = '\0';
-  *flag = (c != EOF); 
+  *flag = (c != EOF);
   return DONE;
 }
 
 
-int fget_str(FILE* fin, char** buf, int* flag){
-    char c = fgetc(fin);
-    char* tmp = NULL;
-    int initial_size = 2, len = 0;
-    *buf = (char*)malloc(initial_size*sizeof(char));
-    if (!*buf){
-        return NO_MEMORY;
-    }
-    while(c != EOF && c != '\n' && c != ' '){
-        if (len == initial_size){
-        initial_size<<=1;
-        tmp = (char*)realloc(*buf, initial_size);
-        if (!tmp){
-            free(*buf);
-            return NO_MEMORY;
+
+int read_files(FILE*** files, FILE* fout, int len){
+    int capture, actual = len, curr = 0;
+    char c;
+    while (capture != actual)
+    {
+        if(curr == actual){
+            curr = 0;
+            capture = 0;
         }
-        *buf = tmp;
+        if ((*files)[curr] == NULL){
+            capture++;
         }
-        (*buf)[len++] = c;
-        c = fgetc(fin);
-    }
-    if (len == initial_size){
-        initial_size++;
-        tmp = (char*)realloc(*buf, initial_size);
-        if (!tmp){
-        free(*buf);
-        return NO_MEMORY;
+        else if ((c = fgetc((*files)[curr])) != EOF){
+            fputc(c, fout);
         }
-        *buf = tmp;
+        else{
+            fclose((*files)[curr]);
+            (*files)[curr] = NULL;
+        }
+        curr++;
     }
-    (*buf)[len] = '\0';
-    *flag = (c != EOF); 
     return DONE;
 }
 

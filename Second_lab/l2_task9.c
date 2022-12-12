@@ -27,7 +27,7 @@ int main(){
     //   return INPUT_ERROR;
     // }
     char* bf = NULL;
-    if(sum_all(&bf, 2, 2, "11", "1011") == DONE){
+    if(sum_all(&bf, 2, 2, "111", "1") == DONE){
         printf("%s", bf);
         free(bf);
     }
@@ -45,8 +45,7 @@ int sum_two(char** str1, char* str2, int base){
             return NO_MEMORY;
         }
         tmp[0] = '0';
-        tmp[ln1 + 1] = 0;
-        int counter = ln1, remainder = 0, numeric;
+        int counter = ln1 + 1, remainder = 0, numeric;
         for(int i = ln1 - 1, j = ln2 - 1; j > -1;){
             numeric = sum_char((*str1)[i], str2[j]) + remainder;
             remainder = numeric / base;
@@ -56,8 +55,12 @@ int sum_two(char** str1, char* str2, int base){
             j--;
         }
         for (int i = counter; i > -1; i--){
-            tmp[i] = (*str1)[i];
+            numeric = (isdigit((*str1)[i]) ? (*str1)[i] - '0' : 'A' - (*str1)[i] + 10) + remainder;
+            remainder = numeric / base;
+            numeric = numeric % base;
+            tmp[i] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
         }
+        tmp[ln1 + 1] = '\0';
     }    
     else{
         tmp = (char*)malloc((ln2 + 2)*sizeof(char));
@@ -65,20 +68,24 @@ int sum_two(char** str1, char* str2, int base){
             return NO_MEMORY;
         }
         tmp[0] = '0';
-        tmp[ln2 + 1] = 0;
         int counter = ln2, remainder = 0, numeric;
         for(int i = ln1 - 1, j = ln2 - 1; i > -1;){
             numeric = sum_char((*str1)[i], str2[j]) + remainder;
             remainder = numeric / base;
             numeric = numeric % base;
-            tmp[counter--] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
+            tmp[i] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
             i--;
             j--;
+            counter = i;
         }
-        for (int i = counter; i > -1;){
-            tmp[i] = str2[i];
-            i--;
+        counter++;
+        for (int i = counter; i > -1; i--){
+            numeric = (isdigit((*str1)[i]) ? (*str1)[i] - '0' : 'A' - (*str1)[i] + 10) + remainder;
+            remainder = numeric / base;
+            numeric = numeric % base;
+            tmp[i] = numeric < 10 ? numeric + '0' : numeric - 10 + 'A';
         }
+        tmp[ln2 + 1] = '\0';
         
     }
     free(*str1);

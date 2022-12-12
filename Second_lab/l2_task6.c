@@ -3,8 +3,18 @@
 #include <stdarg.h>
 
 
-int str_search(char* obr, char* string);
-int file_str_search(char* str, ...);
+enum ERRORS {
+  NO_MEMORY = -1,
+  INPUT_ERROR = -2,
+  FILE_ERROR = -3,
+  DONE = 0,
+  HANDLE = 1
+};
+
+
+int str_search(char* text, char* pattern, int n, int m);
+int file_open(FILE* file, char* pattern);
+int file_str_search(char*str, int count,...);
 
 int main(){
 
@@ -41,18 +51,27 @@ int str_search(char* text, char* pattern, int n, int m){
       }
       else if (j > 0){
           j = next[j];
-          i--;    // так как `i` будет увеличен на следующей итерации
+          i--;
       }
   }
   return 0;
 }
 
+
+int file_open(FILE* file, char* pattern){
+
+}
+
+
 int file_str_search(char*str, int count,...){
-    char* filename = NULL;
+    FILE * file = NULL;
     va_list l;
     va_start(l, count);
     for (int i = 0; i < count; i++) {
-        filename = va_arg(l, char*);
+        if (!(file = fopen(va_arg(l, char*), "r"))){
+            return FILE_ERROR;
+        }
+        
     }
     va_end(l);
     return 0;

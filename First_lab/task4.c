@@ -97,6 +97,7 @@ int main(int argc, char *argv[]){
             }
         }
         else if (c == '\r' || c == EOF){
+            fprintf(fout, "%s %s %s", buff3, buff1, buff2);
             c != EOF ? fputc('\r', fout) : fputc(' ', fout);
             free(buff1);
             free(buff2);
@@ -112,7 +113,7 @@ int main(int argc, char *argv[]){
     }
     fclose(fin);
     fclose(fout);
-    remove(argv[1]);
+    remove("f1.txt");
     rename("to_write_copy.txt", argv[1]);
     return 0;
 }

@@ -93,8 +93,8 @@ void matrix_print(matrix* matr){
 
 
 int create_matrix(matrix** matr){
-    (*matr)->n = rand() % 10 + 1;
-    (*matr)->m = rand() % 10 + 1;
+    (*matr)->n = 3;
+    (*matr)->m = 3;
     (*matr)->matr = (int**)malloc((*matr)->n*sizeof(int*));
     if (!(*matr)->matr){
         return NO_MEMORY;
