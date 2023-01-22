@@ -6,6 +6,15 @@
 #include <math.h>
 
 
+int civ_init(civilian** civ){
+  (*civ)->name = NULL;
+  (*civ)->surname = NULL;
+  (*civ)->patronymic = NULL;
+  (*civ)->birth_date = NULL;
+  (*civ)->sex = -1;
+  (*civ)->salary = 0.0;
+}
+
 int list_init(civ_node** node){
   *node = (civ_node*)malloc(sizeof(civ_node));
   if (!*node){
@@ -157,7 +166,26 @@ int from_file_to_list(FILE* fin, civ_node** head){
 }
 
 int cmp_age(char* b1, char* b2){
-  int flag = -1;
-  char*
+  int flag = 0, num_b1 = 0, num_b2 = 0, equ = 0;
+  int counter = 0
+  char buff1[5] = {'', '', '', '', '\0'}, buff2[5] = {'', '', '', '', '\0'}
+  for(int i = 9; i > 0; i--){
+    if (b1[i] == '.' || b2[i] == '.'){
+      buff1[counter] = '\0';
+      buff2[counter] = '\0';
+      num_b1 = atoi(buff1);
+      num_b2 = atoi(buff2);
+      if (num_b1 != num_b2){
+        flag = num_b1 < num_b2;
+        break;
+      }
+      counter = 0;
+    }
+    else{
+      buff1[counter] = bf1[i];
+      buff2[counter] = bf2[i];
+      counter++;
+    }
+  }
   return flag;
 }

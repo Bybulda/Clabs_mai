@@ -34,6 +34,7 @@ typedef struct civ_node{
 
 int pos_el(int size, int pos);
 int cmp_age(char* b1, char* b2);
+int civ_init(civilian** civ)
 int list_init(civ_node** head);
 int del_civ(civilian** civ);
 int list_destroy(civ_node** head);
